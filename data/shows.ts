@@ -23,6 +23,31 @@ const UNAVAILABLE: Track[] | null = null;
 
 export const shows: Show[] = [
   {
+    id: "bh60",
+    number: 60,
+    date: "2026-03-08",
+    displayDate: "08.03.26",
+    mixcloudKey: "/MusicBoxRadioUK/bamboo-house-sunday-8th-march-2026/",
+    tracklist: {
+      martyn: UNAVAILABLE,
+      tim: [
+        { artist: "Gavin Bryars", title: "Leeds Bells 1" },
+        { artist: "Gavin Bryars, Roger Heaton", title: "Lauda 3 - Third Version" },
+        { artist: "Max Richter", title: "Orlando: Modular Astronomy" },
+        { artist: "Stubbleman", title: "8am Soliloquy" },
+        { artist: "Ryuichi Sakamoto", title: "Solari" },
+        { artist: "Claire M Singer", title: "Forrig" },
+        { artist: "Erland Cooper, Marta Salogni", title: "Cairn I." },
+        { artist: "Duval Timothy, CJ Mirra", title: "Coup pt. 2" },
+        { artist: "Kali Malone, Stephen O'Malley", title: "Siren Song (HTRK Cover)" },
+        { artist: "Olan Mill", title: "Happiness Allergies" },
+        { artist: "Christina Vantzou, John Also Bennett, Oliver Coates", title: "Death, Reverb and Decay (Dreaming)" },
+        { artist: "Yasuaki Shimizu", title: "Shinko – Oboro" },
+        { artist: "Erland Cooper", title: "Salve Regina" },
+      ],
+    },
+  },
+  {
     id: "bh28",
     number: 28,
     date: "2023-06-11",
