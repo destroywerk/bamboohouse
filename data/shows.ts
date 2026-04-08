@@ -16,6 +16,7 @@ export type Show = {
   mixcloudKey: string;
   quote?: string;
   photo?: string;
+  timFirst?: boolean;
   tracklist?: ShowTracklist;
 };
 
@@ -44,6 +45,32 @@ export const shows: Show[] = [
         { artist: "Christina Vantzou, John Also Bennett, Oliver Coates", title: "Death, Reverb and Decay (Dreaming)" },
         { artist: "Yasuaki Shimizu", title: "Shinko – Oboro" },
         { artist: "Erland Cooper", title: "Salve Regina" },
+      ],
+    },
+  },
+  {
+    id: "bh59",
+    number: 59,
+    date: "2026-02-08",
+    displayDate: "08.02.26",
+    mixcloudKey: "/MusicBoxRadioUK/bamboo-house-sunday-8th-february-2026/",
+    timFirst: false,
+    tracklist: {
+      martyn: UNAVAILABLE,
+      tim: [
+        { artist: "Aska Matsumiya", title: "A Song for All Seasons" },
+        { artist: "Loscil", title: "Argonaut I" },
+        { artist: "Jeremiah Chiu & Marta Sofia Honer", title: "Mean Solar Time (reflected)" },
+        { artist: "DjRUM", title: "Out Of Dust" },
+        { artist: "Finis Africae", title: "El secreto de las 12" },
+        { artist: "Ólafur Arnalds", title: "Saudade (When We Are Born)" },
+        { artist: "Romance", title: "In The Night" },
+        { artist: "Marigold Sun", title: "Swimming" },
+        { artist: "Mac DeMarco", title: "20200229 2" },
+        { artist: "Page McConnell", title: "Mystery Meat" },
+        { artist: "Green-House", title: "Farewell, Little Island" },
+        { artist: "Elori Saxl & Henry Solomon", title: "Reno Silver" },
+        { artist: "Joseph Shabason", title: "0-13" },
       ],
     },
   },

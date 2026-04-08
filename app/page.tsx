@@ -226,7 +226,7 @@ function ShowPlayer({ show }: { show: Show & { mixcloudKey: string } }) {
 
               {tracklistOpen && (
                 <div className="border-t border-[var(--green)] border-opacity-20 pt-4">
-                  {show.number % 2 !== 0 ? (
+                  {(show.timFirst !== undefined ? show.timFirst : show.number % 2 !== 0) ? (
                     <>
                       {show.tracklist?.tim !== undefined && (
                         <TracklistSection label="Tim" tracks={show.tracklist.tim} />
