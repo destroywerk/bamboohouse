@@ -366,9 +366,9 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: "var(--bg)" }}>
+    <div className="min-h-screen" style={{ background: "var(--bg-body)" }}>
       {/* Header */}
-      <header className="border-b border-[var(--border)] pl-12 pr-6 py-5 flex items-center justify-between">
+      <header className="border-b border-[var(--border)] pl-12 pr-6 py-5 flex items-center justify-between" style={{ background: "var(--bg)" }}>
         <div
           role="heading"
           aria-level={1}
