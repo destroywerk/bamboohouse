@@ -747,7 +747,7 @@ export const shows: Show[] = [
     date: "2021-09-12",
     displayDate: "12.09.21",
     mixcloudKey: "/MusicBoxRadioUK/bamboo-house-sunday-12th-september-2021/",
-    quote: "",
+    quote: "If you can look across the distance without wanting to close it up, if you can own your longing in the same way that you own the beauty of that blue that can never be possessed? For something of this longing will, like the blue of distance, only be relocated, not assuaged, by acquisition and arrival.",
     photo: "https://freight.cargo.site/t/original/i/3c4a87592d55504c070ac3ac2b13e5b09a2bb43b5e0eb29ac9b1782a484051a8/Screenshot-2023-01-07-at-13.57.18.png",
     tracklist: {
       tim: [
