@@ -261,10 +261,11 @@ function ShowPlayer({ show }: { show: Show & { mixcloudKey: string } }) {
 
 // ─── Main page ────────────────────────────────────────────────────────────────
 export default function Home() {
-  // Initialise with the first hardcoded show so it opens immediately on render
+  // Start with the latest hardcoded show; switch to the true latest once API loads
   const [selectedId, setSelectedId] = useState<string | null>(
     shows[0]?.id ?? null
   );
+  const hasAutoUpdated = useRef(false);
   const [recentShows, setRecentShows] = useState<MixcloudShow[]>([]);
   const [loadingRecent, setLoadingRecent] = useState(true);
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
@@ -277,6 +278,16 @@ export default function Home() {
       .catch(() => {})
       .finally(() => setLoadingRecent(false));
   }, []);
+
+  // Once the API has loaded and allShows is fully populated, switch the
+  // auto-selected show to the true latest (only if the user hasn't tapped
+  // anything manually yet — tracked via hasAutoUpdated).
+  useEffect(() => {
+    if (!loadingRecent && !hasAutoUpdated.current && allShows.length > 0) {
+      hasAutoUpdated.current = true;
+      setSelectedId(allShows[0].id);
+    }
+  }, [loadingRecent, allShows]);
 
   // Merge API shows with hardcoded shows.
   // API data is the source of truth for slugs and broadcast dates:
@@ -348,6 +359,7 @@ export default function Home() {
   );
 
   const handleSelect = (id: string) => {
+    hasAutoUpdated.current = true; // prevent auto-switch overriding manual selection
     if (selectedId === id) {
       setSelectedId(null);
     } else {
