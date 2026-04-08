@@ -695,7 +695,7 @@ export const shows: Show[] = [
     date: "2021-08-15",
     displayDate: "15.08.21",
     mixcloudKey: "/MusicBoxRadioUK/bamboo-house-sunday-15th-august-2021/",
-    quote: "",
+    quote: "Protecting what we now, offering the soft comfort of the dark in return... and then the light comes through, stronger than years of shell-shaping, stronger than that past, a tickle, a warm reminder, I've got you.",
     photo: "https://freight.cargo.site/t/original/i/77e84d19f9f6121fcd1d433791dc79ffe79f65f0f4b6efc5c5ce9e135b12e187/Screenshot-2023-01-07-at-13.55.36.png",
     tracklist: {
       martyn: UNAVAILABLE,
