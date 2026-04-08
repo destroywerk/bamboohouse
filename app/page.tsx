@@ -329,7 +329,20 @@ export default function Home() {
       (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
     );
 
-    const numbered = merged.map((s, i) => ({ ...s, number: i + 1 }));
+    const photoByNumber: Record<number, string> = {
+      29: "/photos/bh29.jpg", 30: "/photos/bh30.jpg", 31: "/photos/bh31.jpg",
+      32: "/photos/bh32.jpg", 33: "/photos/bh33.jpg", 34: "/photos/bh34.jpg",
+      35: "/photos/bh35.jpg", 36: "/photos/bh36.jpg", 37: "/photos/bh37.jpg",
+      38: "/photos/bh38.jpg", 39: "/photos/bh39.jpg", 40: "/photos/bh40.jpg",
+      41: "/photos/bh41.jpg", 42: "/photos/bh42.jpg", 43: "/photos/bh43.jpg",
+      44: "/photos/bh44.jpg", 45: "/photos/bh45.jpg",
+    };
+
+    const numbered = merged.map((s, i) => {
+      const number = i + 1;
+      const photo = s.photo ?? photoByNumber[number];
+      return { ...s, number, ...(photo ? { photo } : {}) };
+    });
 
     // Return newest first
     return numbered.reverse();
