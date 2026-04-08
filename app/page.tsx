@@ -334,11 +334,14 @@ export default function Home() {
       32: "/photos/bh32.jpg", 33: "/photos/bh33.jpg", 34: "/photos/bh34.jpg",
       35: "/photos/bh35.jpg", 36: "/photos/bh36.jpg", 37: "/photos/bh37.jpg",
       38: "/photos/bh38.jpg", 39: "/photos/bh39.jpg", 40: "/photos/bh40.jpg",
-      41: "/photos/bh41.jpg", 42: "/photos/bh42.jpg", 43: "/photos/bh43.jpg",
+      41: "/photos/bh41.jpg",       42: "/photos/bh42.jpg", 43: "/photos/bh43.png",
       44: "/photos/bh44.jpg", 45: "/photos/bh45.jpg",
       46: "/photos/bh46.png", 47: "/photos/bh47.png", 48: "/photos/bh48.png",
       49: "/photos/bh49.png", 50: "/photos/bh50.png", 51: "/photos/bh51.png",
       52: "/photos/bh52.png",
+      53: "/photos/bh53.png", 54: "/photos/bh54.png", 55: "/photos/bh55.png",
+      56: "/photos/bh56.png", 57: "/photos/bh57.png", 58: "/photos/bh58.png",
+      59: "/photos/bh59.png",
     };
 
     const numbered = merged.map((s, i) => {
