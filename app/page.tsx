@@ -336,6 +336,9 @@ export default function Home() {
       38: "/photos/bh38.jpg", 39: "/photos/bh39.jpg", 40: "/photos/bh40.jpg",
       41: "/photos/bh41.jpg", 42: "/photos/bh42.jpg", 43: "/photos/bh43.jpg",
       44: "/photos/bh44.jpg", 45: "/photos/bh45.jpg",
+      46: "/photos/bh46.png", 47: "/photos/bh47.png", 48: "/photos/bh48.png",
+      49: "/photos/bh49.png", 50: "/photos/bh50.png", 51: "/photos/bh51.png",
+      52: "/photos/bh52.png",
     };
 
     const numbered = merged.map((s, i) => {
