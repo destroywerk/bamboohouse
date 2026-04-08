@@ -704,7 +704,7 @@ export const shows: Show[] = [
     date: "2021-10-10",
     displayDate: "10.10.21",
     mixcloudKey: "/MusicBoxRadioUK/bamboo-house-sunday-10th-october-2021/",
-    quote: "",
+    quote: "Blue protects white from innocence / Blue drags black with it / Blue is darkness made visible.",
     photo: "https://freight.cargo.site/t/original/i/8b672ec0214f0db1f121ee9231ff2f154534e042c57dea045cd91a071bc389ac/Screenshot-2023-01-07-at-13.58.03.png",
     tracklist: {
       martyn: [
