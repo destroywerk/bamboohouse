@@ -152,7 +152,7 @@ function TracklistSection({
 }
 
 // ─── Show player ──────────────────────────────────────────────────────────────
-function ShowPlayer({ show }: { show: Show & { mixcloudKey: string } }) {
+function ShowPlayer({ show, autoOpenTracklist }: { show: Show & { mixcloudKey: string }; autoOpenTracklist?: boolean }) {
   const [tracklistOpen, setTracklistOpen] = useState(false);
   const embedUrl = getMixcloudEmbedUrl(show.mixcloudKey);
   const hasAnyTracklist =
@@ -161,6 +161,12 @@ function ShowPlayer({ show }: { show: Show & { mixcloudKey: string } }) {
       (Array.isArray(show.tracklist.tim) && show.tracklist.tim.length > 0) ||
       (Array.isArray(show.tracklist.martyn) && show.tracklist.martyn.length > 0)
     );
+
+  useEffect(() => {
+    if (autoOpenTracklist && hasAnyTracklist) {
+      setTracklistOpen(true);
+    }
+  }, [autoOpenTracklist, hasAnyTracklist]);
 
   return (
     <div className="border border-t-0 border-[var(--green)] bg-[#FCFCFC] px-5 pt-4 pb-5">
@@ -573,7 +579,12 @@ export default function Home() {
                   isSelected={selectedId === show.id}
                   onClick={() => handleSelect(show.id)}
                 />
-                {selectedId === show.id && <ShowPlayer show={show} />}
+                {selectedId === show.id && (
+                  <ShowPlayer
+                    show={show}
+                    autoOpenTracklist={show.id === allShows[0]?.id}
+                  />
+                )}
               </div>
             ))}
           </div>
