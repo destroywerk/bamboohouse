@@ -676,7 +676,7 @@ export const shows: Show[] = [
     date: "2021-11-21",
     displayDate: "21.11.21",
     mixcloudKey: "/MusicBoxRadioUK/bamboo-house-sunday-21st-november-2021/",
-    quote: "",
+    quote: "Sustainability is regarded as a \"normative concept\". This means it is based on what people value or find desirable: The quest for sustainability involves connecting what is known through scientific study to applications in pursuit of what people want for the future.",
     photo: "https://freight.cargo.site/t/original/i/3572bdf1a515107193a9fbe035952b9594ddb337cd166b3a74c80fbf73710f3f/Screenshot-2023-01-07-at-13.57.51.png",
     tracklist: {
       tim: [
