@@ -1,36 +1,40 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Bamboo House Radio
 
-## Getting Started
+A monthly ambient radio show broadcast on [Music Box Radio UK](https://musicboxradio.co.uk). Curated by Tim Green and Martyn Riley.
 
-First, run the development server:
+## Development
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Deployment
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### GitHub + Vercel
 
-## Learn More
+1. Push this repository to GitHub
+2. Import the project on [Vercel](https://vercel.com/new)
+3. Vercel will auto-detect Next.js and deploy
 
-To learn more about Next.js, take a look at the following resources:
+No environment variables required — the Mixcloud API is public.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Adding New Shows
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+New Bamboo House episodes are automatically fetched from the Mixcloud API when the site loads. Tracklisting data for older shows (BH01–BH28) is in `data/shows.ts`.
 
-## Deploy on Vercel
+To add tracklisting for a new show, add an entry to `data/shows.ts` following the existing format. The `mixcloudKey` follows the pattern:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+/MusicBoxRadioUK/bamboo-house-sunday-{day}th-{month}-{year}/
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+e.g. `/MusicBoxRadioUK/bamboo-house-sunday-14th-march-2021/`
+
+## Stack
+
+- [Next.js 16](https://nextjs.org) (App Router)
+- [Tailwind CSS v4](https://tailwindcss.com)
+- [Mixcloud Widget API](https://www.mixcloud.com/developers/widget/)
