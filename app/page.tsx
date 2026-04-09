@@ -13,16 +13,13 @@ type MixcloudShow = {
 function formatDisplayDate(isoDate: string): string {
   const d = new Date(isoDate);
   const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  const day = d.getUTCDate();
-  return `${day} ${months[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
+  return `${d.getUTCDate()} ${months[d.getUTCMonth()]} ${d.getUTCFullYear()}`;
 }
 
 function getYear(isoDate: string): number {
   return new Date(isoDate).getUTCFullYear();
 }
 
-// Parse the broadcast date from a Mixcloud show name like
-// "Bamboo House - Sunday 8th March 2026" → "2026-03-08"
 function parseBroadcastDate(name: string): string | null {
   const monthMap: Record<string, string> = {
     january: "01", february: "02", march: "03", april: "04",
@@ -35,25 +32,19 @@ function parseBroadcastDate(name: string): string | null {
   if (!month) return null;
   return `${m[3]}-${month}-${m[1].padStart(2, "0")}`;
 }
+
+// ─── Logo ─────────────────────────────────────────────────────────────────────
 function LogoMark({ size = 40 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 40 40" fill="none">
-      <circle
-        cx="20" cy="20" r="18"
-        stroke="var(--green)" strokeWidth="1.5" fill="none"
-        style={{ animation: "pulse-ring-outer 3.5s ease-in-out infinite" }}
-      />
-      <circle
-        cx="20" cy="20" r="12"
-        stroke="var(--green)" strokeWidth="1.5" fill="none"
-        style={{ animation: "pulse-ring-inner 3.5s ease-in-out infinite 0.4s" }}
-      />
-      <circle cx="20" cy="20" r="5.5" fill="var(--green)" />
+      <circle cx="20" cy="20" r="18" stroke="#E70000" strokeWidth="1.5" fill="none" opacity="0.3" />
+      <circle cx="20" cy="20" r="12" stroke="#E70000" strokeWidth="1.5" fill="none" opacity="0.6" />
+      <circle cx="20" cy="20" r="5.5" fill="#E70000" />
     </svg>
   );
 }
 
-// ─── Show card ───────────────────────────────────────────────────────────────
+// ─── Show card ────────────────────────────────────────────────────────────────
 function ShowCard({
   show,
   isSelected,
@@ -65,53 +56,86 @@ function ShowCard({
 }) {
   const hasTracklist =
     show.tracklist &&
-    ((show.tracklist.tim && show.tracklist.tim.length > 0) ||
-      (show.tracklist.martyn && show.tracklist.martyn.length > 0));
+    ((Array.isArray(show.tracklist.tim) && show.tracklist.tim.length > 0) ||
+      (Array.isArray(show.tracklist.martyn) && show.tracklist.martyn.length > 0));
+
+  const dateStr = formatDisplayDate(show.date);
+  const numStr = String(show.number);
+
+  if (isSelected) {
+    return (
+      <button
+        onClick={onClick}
+        className="w-full flex items-center justify-between px-5 overflow-hidden"
+        style={{ height: 90, background: "#E70000" }}
+      >
+        <span
+          className="font-black text-white leading-none"
+          style={{ fontSize: "clamp(36px, 5.5vw, 64px)", letterSpacing: "-3.2px" }}
+        >
+          BH{String(show.number).padStart(2, "0")}
+        </span>
+        <span
+          className="font-black text-white leading-none"
+          style={{ fontSize: "clamp(36px, 5.5vw, 64px)", letterSpacing: "-3.2px" }}
+        >
+          {dateStr}
+        </span>
+      </button>
+    );
+  }
 
   return (
     <button
       onClick={onClick}
-      className={`
-        group w-full text-left transition-all duration-150
-        border px-5 py-4
-        ${isSelected
-          ? "border-[var(--green)] bg-[var(--green-light)]"
-          : "border-[var(--border)] bg-[var(--surface)] hover:border-[var(--green)] hover:bg-[var(--green-light)]"
-        }
-      `}
+      className="group w-full relative overflow-hidden border border-black bg-white transition-colors duration-100"
+      style={{ height: 90 }}
+      onMouseEnter={(e) => {
+        (e.currentTarget as HTMLButtonElement).style.background = "rgba(231,0,0,0.1)";
+      }}
+      onMouseLeave={(e) => {
+        (e.currentTarget as HTMLButtonElement).style.background = "#ffffff";
+      }}
     >
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-baseline gap-3 min-w-0">
-          <span
-            className={`text-xs tracking-widest uppercase shrink-0 tabular-nums ${
-              isSelected ? "text-[var(--green)] font-bold" : "font-medium text-[var(--text-dim)] group-hover:text-[var(--green)]"
-            }`}
-          >
-            BH{String(show.number).padStart(2, "0")}
-          </span>
-          <span className={`text-xs tabular-nums ${isSelected ? "text-[var(--green)] font-bold" : "text-[var(--text-muted)]"}`}>{formatDisplayDate(show.date)}</span>
-        </div>
-        <div className="flex items-center gap-3 shrink-0">
+      {/* Overflowing number */}
+      <span
+        className="absolute font-black leading-none select-none pointer-events-none transition-colors duration-100 group-hover:text-[#E70000]"
+        style={{
+          fontSize: "clamp(64px, 10vw, 128px)",
+          letterSpacing: "-6.4px",
+          color: "#000",
+          left: -8,
+          top: "50%",
+          transform: "translateY(-50%)",
+        }}
+      >
+        {numStr}
+      </span>
+
+      {/* Content: date + quote */}
+      <div
+        className="absolute inset-y-0 flex flex-col justify-center gap-1 min-w-0"
+        style={{ left: "26%", right: show.photo ? 110 : 16 }}
+      >
+        <div className="flex items-center justify-between gap-3">
+          <span className="text-[13px] sm:text-[14px] text-[#999] shrink-0">{dateStr}</span>
           {hasTracklist && (
-            <span className="text-[9px] tracking-widest uppercase text-[var(--green)] opacity-60">
-              tracklist
-            </span>
+            <span className="text-[12px] sm:text-[13px] text-[#999] shrink-0">Tracklist</span>
           )}
-          <svg
-            width="11"
-            height="11"
-            viewBox="0 0 12 12"
-            fill="none"
-            className={`transition-transform duration-200 text-[var(--text-dim)] ${isSelected ? "rotate-90" : ""}`}
-          >
-            <path d="M4 2l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
         </div>
+        {show.quote && (
+          <p className="text-[12px] sm:text-[13px] text-[#999] truncate leading-snug">
+            &ldquo;{show.quote}&rdquo;
+          </p>
+        )}
       </div>
-      {show.quote && !isSelected && (
-        <p className="mt-1.5 text-[11px] text-[var(--text-dim)] leading-relaxed line-clamp-1 italic">
-          &ldquo;{show.quote}&rdquo;
-        </p>
+
+      {/* Photo thumbnail */}
+      {show.photo && (
+        <div className="absolute right-0 top-0 h-full overflow-hidden" style={{ width: 100 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={show.photo} alt="" className="w-full h-full object-cover" />
+        </div>
       )}
     </button>
   );
@@ -128,20 +152,18 @@ function TracklistSection({
   if (tracks === undefined) return null;
   return (
     <div className="mb-5">
-      <div className="text-[9px] tracking-widest uppercase text-[var(--green)] mb-2 font-medium">
-        {label}
-      </div>
+      <div className="text-[11px] uppercase tracking-widest text-[#999] mb-2">{label}</div>
       {tracks === null ? (
-        <p className="text-[11px] text-[var(--text-dim)] italic">Tracklisting not available</p>
+        <p className="text-[13px] text-[#999] font-light">Tracklisting not available</p>
       ) : (
         <ol className="space-y-0.5">
           {tracks.map((track, i) => (
-            <li key={i} className="flex gap-3 text-[11px] leading-relaxed">
-              <span className="text-[var(--text-dim)] shrink-0 w-5 text-right tabular-nums">{i + 1}</span>
-              <span className="text-[var(--text-muted)]">
-                <span className="text-[var(--text)]">{track.artist}</span>
+            <li key={i} className="flex gap-3 text-[13px] leading-relaxed">
+              <span className="text-[#999] shrink-0 w-5 text-right tabular-nums">{i + 1}</span>
+              <span className="font-light text-[#666]">
+                <span className="text-black font-normal">{track.artist}</span>
                 {" — "}
-                <span>{track.title}</span>
+                {track.title}
               </span>
             </li>
           ))}
@@ -152,35 +174,44 @@ function TracklistSection({
 }
 
 // ─── Show player ──────────────────────────────────────────────────────────────
-function ShowPlayer({ show, autoOpenTracklist }: { show: Show & { mixcloudKey: string }; autoOpenTracklist?: boolean }) {
+function ShowPlayer({
+  show,
+  autoOpenTracklist,
+}: {
+  show: Show & { mixcloudKey: string };
+  autoOpenTracklist?: boolean;
+}) {
   const [tracklistOpen, setTracklistOpen] = useState(false);
   const embedUrl = getMixcloudEmbedUrl(show.mixcloudKey);
   const hasAnyTracklist =
     show.tracklist !== undefined &&
-    (
-      (Array.isArray(show.tracklist.tim) && show.tracklist.tim.length > 0) ||
-      (Array.isArray(show.tracklist.martyn) && show.tracklist.martyn.length > 0)
-    );
+    ((Array.isArray(show.tracklist.tim) && show.tracklist.tim.length > 0) ||
+      (Array.isArray(show.tracklist.martyn) && show.tracklist.martyn.length > 0));
 
   useEffect(() => {
-    if (autoOpenTracklist && hasAnyTracklist) {
-      setTracklistOpen(true);
-    }
+    if (autoOpenTracklist && hasAnyTracklist) setTracklistOpen(true);
   }, [autoOpenTracklist, hasAnyTracklist]);
 
+  const timFirst =
+    show.timFirst !== undefined
+      ? show.timFirst
+      : show.number >= 32 && show.number <= 58
+        ? show.number % 2 === 0
+        : show.number % 2 !== 0;
+
   return (
-    <div className="border border-t-0 border-[var(--green)] bg-[#FCFCFC] px-5 pt-4 pb-5">
+    <div className="border border-t-0 border-black bg-white px-5 pt-5 pb-6">
       {show.quote && (
-        <p className="text-[11px] text-[var(--text-muted)] italic leading-relaxed mb-3 border-l-2 border-[var(--green)] pl-3">
+        <p className="text-[14px] font-light text-[#999] leading-[20px] mb-5">
           &ldquo;{show.quote}&rdquo;
         </p>
       )}
 
-      <div className="mb-4">
+      <div className="mb-5">
         {show.id === "bh26" ? (
           <div
-            className="w-full flex items-center justify-center text-center px-4"
-            style={{ height: 120, background: "#FCFCFC", border: "1px solid #e0e0e0", color: "var(--text-muted)", fontSize: 11, lineHeight: 1.6 }}
+            className="w-full flex items-center justify-center text-center px-6"
+            style={{ height: 120, border: "1px solid #e0e0e0", color: "#999", fontSize: 13, lineHeight: 1.6, fontWeight: 300 }}
           >
             This show was all Ryuichi Sakamoto songs in tribute to him so MixCloud won&rsquo;t host it.
           </div>
@@ -198,70 +229,45 @@ function ShowPlayer({ show, autoOpenTracklist }: { show: Show & { mixcloudKey: s
         )}
       </div>
 
-      {/* Photo + tracklist row */}
-      <div className="flex flex-col sm:flex-row gap-4 items-start">
+      {/* Photo + tracklist */}
+      <div className="flex flex-col sm:flex-row gap-6 items-start">
         {show.photo && (
-          <div className="shrink-0 w-full sm:w-[300px] sm:h-[300px] overflow-hidden order-first sm:order-last">
+          <div className="shrink-0 w-full sm:w-[200px] sm:h-[200px] overflow-hidden order-first sm:order-last">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={show.photo}
-              alt=""
-              className="w-full aspect-square object-cover"
-            />
+            <img src={show.photo} alt="" className="w-full aspect-square object-cover" />
           </div>
         )}
-
         <div className="flex-1 min-w-0 order-last sm:order-first">
           {hasAnyTracklist ? (
             <div>
               <button
                 onClick={() => setTracklistOpen((o) => !o)}
-                className="flex items-center gap-2 text-[10px] tracking-widest uppercase text-[var(--green)] hover:opacity-70 transition-opacity mb-3"
+                className="flex items-center gap-2 text-[12px] uppercase tracking-widest text-black hover:text-[#E70000] transition-colors mb-4"
               >
-                <svg
-                  width="9"
-                  height="9"
-                  viewBox="0 0 10 10"
-                  fill="none"
-                  className={`transition-transform duration-200 ${tracklistOpen ? "rotate-90" : ""}`}
-                >
+                <svg width="8" height="8" viewBox="0 0 10 10" fill="none"
+                  className={`transition-transform duration-200 ${tracklistOpen ? "rotate-90" : ""}`}>
                   <path d="M3 1.5l4 3.5-4 3.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
                 {tracklistOpen ? "Hide" : "Show"} tracklisting
               </button>
-
               {tracklistOpen && (
-                <div className="border-t border-[var(--green)] border-opacity-20 pt-4">
-                  {(show.timFirst !== undefined
-                    ? show.timFirst
-                    : show.number >= 32 && show.number <= 58
-                      ? show.number % 2 === 0
-                      : show.number % 2 !== 0) ? (
+                <div className="border-t border-black border-opacity-10 pt-4">
+                  {timFirst ? (
                     <>
-                      {show.tracklist?.tim !== undefined && (
-                        <TracklistSection label="Tim" tracks={show.tracklist.tim} />
-                      )}
-                      {show.tracklist?.martyn !== undefined && (
-                        <TracklistSection label="Martyn" tracks={show.tracklist.martyn} />
-                      )}
+                      {show.tracklist?.tim !== undefined && <TracklistSection label="Tim" tracks={show.tracklist.tim} />}
+                      {show.tracklist?.martyn !== undefined && <TracklistSection label="Martyn" tracks={show.tracklist.martyn} />}
                     </>
                   ) : (
                     <>
-                      {show.tracklist?.martyn !== undefined && (
-                        <TracklistSection label="Martyn" tracks={show.tracklist.martyn} />
-                      )}
-                      {show.tracklist?.tim !== undefined && (
-                        <TracklistSection label="Tim" tracks={show.tracklist.tim} />
-                      )}
+                      {show.tracklist?.martyn !== undefined && <TracklistSection label="Martyn" tracks={show.tracklist.martyn} />}
+                      {show.tracklist?.tim !== undefined && <TracklistSection label="Tim" tracks={show.tracklist.tim} />}
                     </>
                   )}
                 </div>
               )}
             </div>
           ) : (
-            <p className="text-[10px] tracking-widest uppercase text-[var(--text-dim)]">
-              No tracklisting available
-            </p>
+            <p className="text-[13px] font-light text-[#999]">No tracklisting available.</p>
           )}
         </div>
       </div>
@@ -286,37 +292,26 @@ export default function Home() {
       .finally(() => setLoadingRecent(false));
   }, []);
 
-  // Merge API shows with hardcoded shows.
-  // API data is the source of truth for slugs and broadcast dates:
-  //   - build month → API show map
-  //   - enrich hardcoded shows with confirmed API key + title-parsed date
-  //   - append any API episodes that have no hardcoded match
   const allShows: (Show & { mixcloudKey: string })[] = useMemo(() => {
     type ApiShowEnriched = MixcloudShow & { _broadcastDate: string };
 
-    // Build month → best API show map (prefer title-parsed date over upload date)
     const apiByMonth: Record<string, ApiShowEnriched> = {};
     recentShows.forEach((r) => {
       if (!r.name.toLowerCase().startsWith("bamboo house")) return;
       const date = parseBroadcastDate(r.name) ?? r.created_time.split("T")[0];
       const month = date.slice(0, 7);
       const existing = apiByMonth[month];
-      // Prefer the entry whose date came from the title (not just upload time)
       if (!existing || parseBroadcastDate(r.name)) {
         apiByMonth[month] = { ...r, _broadcastDate: date };
       }
     });
 
-    // Enrich hardcoded shows: replace slug + date with API-confirmed values when available
     const enrichedShows = shows.map((s) => {
       const apiShow = apiByMonth[s.date.slice(0, 7)];
-      if (apiShow) {
-        return { ...s, mixcloudKey: apiShow.key, date: apiShow._broadcastDate };
-      }
+      if (apiShow) return { ...s, mixcloudKey: apiShow.key, date: apiShow._broadcastDate };
       return s;
     });
 
-    // API episodes not covered by any hardcoded show
     const hardcodedMonths = new Set(shows.map((s) => s.date.slice(0, 7)));
     const additionalShows: (Show & { mixcloudKey: string })[] = Object.entries(apiByMonth)
       .filter(([month]) => !hardcodedMonths.has(month))
@@ -330,7 +325,6 @@ export default function Home() {
         tracklist: { tim: null, martyn: null } as ShowTracklist,
       }));
 
-    // Sort chronologically (oldest first) to assign sequential numbers
     const merged = [...enrichedShows, ...additionalShows].sort(
       (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
     );
@@ -340,7 +334,7 @@ export default function Home() {
       32: "/photos/bh32.jpg", 33: "/photos/bh33.jpg", 34: "/photos/bh34.jpg",
       35: "/photos/bh35.jpg", 36: "/photos/bh36.jpg", 37: "/photos/bh37.jpg",
       38: "/photos/bh38.jpg", 39: "/photos/bh39.jpg", 40: "/photos/bh40.jpg",
-      41: "/photos/bh41.jpg",       42: "/photos/bh42.jpg", 43: "/photos/bh43.png",
+      41: "/photos/bh41.jpg", 42: "/photos/bh42.jpg", 43: "/photos/bh43.png",
       44: "/photos/bh44.jpg", 45: "/photos/bh45.jpg",
       46: "/photos/bh46.png", 47: "/photos/bh47.png", 48: "/photos/bh48.png",
       49: "/photos/bh49.png", 50: "/photos/bh50.png", 51: "/photos/bh51.png",
@@ -350,17 +344,20 @@ export default function Home() {
       59: "/photos/bh59.png", 60: "/photos/bh60.png",
     };
 
+    const quoteByNumber: Record<number, string> = {
+      38: "Everyone knows that all life requires energy. But we rarely consider how dependent art and culture are on the energy that is needed to produce, practice and sustain them. What we fail to see are the usually invisible sources of energy that make our art and culture(s) possible and bring with them fundamental values that we are all constrained to live with (whether we approve of them or not).",
+    };
+
     const numbered = merged.map((s, i) => {
       const number = i + 1;
       const photo = s.photo ?? photoByNumber[number];
-      return { ...s, number, ...(photo ? { photo } : {}) };
+      const quote = s.quote ?? quoteByNumber[number];
+      return { ...s, number, ...(photo ? { photo } : {}), ...(quote ? { quote } : {}) };
     });
 
-    // Return newest first
     return numbered.reverse();
   }, [recentShows]);
 
-  // Auto-open the latest show once the API has loaded (runs once only)
   useEffect(() => {
     if (!loadingRecent && !hasAutoOpened.current && allShows.length > 0) {
       hasAutoOpened.current = true;
@@ -368,22 +365,18 @@ export default function Home() {
     }
   }, [loadingRecent, allShows]);
 
-  // Extract unique years for filter
   const years = useMemo(() => {
     const set = new Set(allShows.map((s) => getYear(s.date)));
-    return Array.from(set).sort((a, b) => b - a); // newest first
+    return Array.from(set).sort((a, b) => b - a);
   }, [allShows]);
 
   const filteredShows = useMemo(
-    () =>
-      selectedYear
-        ? allShows.filter((s) => getYear(s.date) === selectedYear)
-        : allShows,
+    () => selectedYear ? allShows.filter((s) => getYear(s.date) === selectedYear) : allShows,
     [allShows, selectedYear]
   );
 
   const handleSelect = (id: string) => {
-    hasAutoOpened.current = true; // prevent auto-switch overriding manual selection
+    hasAutoOpened.current = true;
     if (selectedId === id) {
       setSelectedId(null);
     } else {
@@ -395,14 +388,13 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: "var(--bg-body)" }}>
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="border-b border-[var(--border)] pl-6 sm:pl-12 pr-6 py-5 flex items-center justify-between" style={{ background: "var(--bg)" }}>
+      <header className="flex items-center justify-between px-6 bg-black" style={{ height: 52 }}>
         <div
           role="heading"
           aria-level={1}
-          className="text-[15px] tracking-[0.45em] uppercase font-light leading-none"
-          style={{ color: "var(--text)" }}
+          className="text-[14px] uppercase tracking-[0.15em] font-light text-white leading-none"
         >
           Bamboo House
         </div>
@@ -410,170 +402,129 @@ export default function Home() {
           href="https://www.mixcloud.com/MusicBoxRadioUK/"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-[10px] tracking-widest uppercase border border-[var(--green)] px-3 py-1.5 text-[var(--green)] hover:bg-[var(--green-light)] transition-colors"
+          className="text-[13px] uppercase tracking-widest text-white hover:text-[#E70000] transition-colors"
         >
-          Mixcloud
+          Mixcloud ↗
         </a>
       </header>
 
-      <div className="max-w-6xl mx-auto px-6 py-8 lg:flex lg:gap-12">
+      <div className="max-w-7xl mx-auto px-6 py-8 lg:flex lg:gap-16">
         {/* Sidebar */}
-        <aside className="lg:w-64 lg:shrink-0 mb-4 lg:mb-0">
+        <aside className="lg:w-72 lg:shrink-0 mb-6 lg:mb-0">
           <div className="lg:sticky lg:top-8">
-            <div className="mb-6">
-              {/* On mobile: logo + links share a row. On lg: logo sits alone above the text */}
-              <div className="flex items-start justify-between lg:block mb-5">
-                <LogoMark size={44} />
-                {/* Links — right-aligned on mobile, moved below stats on lg */}
-                <div className="flex flex-col items-end gap-1.5 lg:hidden">
-                  <a
-                    href="https://www.mixcloud.com/MusicBoxRadioUK/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[10px] tracking-widest uppercase text-[var(--green)] hover:opacity-70 transition-opacity"
-                  >
-                    MusicBoxRadioUK ↗
-                  </a>
-                  <a
-                    href="https://martynriley.co.uk/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[10px] tracking-widest uppercase text-[var(--green)] hover:opacity-70 transition-opacity"
-                  >
-                    Martyn Riley ↗
-                  </a>
-                  <a
-                    href="https://timgreenstudio.cargo.site/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[10px] tracking-widest uppercase text-[var(--green)] hover:opacity-70 transition-opacity"
-                  >
-                    Tim Green ↗
-                  </a>
-                </div>
+            {/* Logo + mobile links row */}
+            <div className="flex items-start justify-between lg:block mb-5">
+              <LogoMark size={44} />
+              <div className="flex flex-col items-end gap-2 lg:hidden">
+                <a href="https://www.mixcloud.com/MusicBoxRadioUK/" target="_blank" rel="noopener noreferrer"
+                  className="text-[11px] uppercase tracking-widest text-black hover:text-[#E70000] transition-colors">
+                  MusicBoxRadioUK ↗
+                </a>
+                <a href="https://martynriley.co.uk/" target="_blank" rel="noopener noreferrer"
+                  className="text-[11px] uppercase tracking-widest text-black hover:text-[#E70000] transition-colors">
+                  Martyn Riley ↗
+                </a>
+                <a href="https://timgreenstudio.cargo.site/" target="_blank" rel="noopener noreferrer"
+                  className="text-[11px] uppercase tracking-widest text-black hover:text-[#E70000] transition-colors">
+                  Tim Green ↗
+                </a>
               </div>
-              <p className="text-xs leading-relaxed" style={{ color: "var(--text-muted)" }}>
-                Bamboo House is two hours of slow-radio by two friends –{" "}
-                <a
-                  href="https://martynriley.co.uk/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline decoration-[var(--green)] underline-offset-2 text-[var(--green)] hover:opacity-70 transition-opacity"
-                >
-                  Martyn Riley
-                </a>
-                {" & "}
-                <a
-                  href="https://timgreenstudio.cargo.site/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline decoration-[var(--green)] underline-offset-2 text-[var(--green)] hover:opacity-70 transition-opacity"
-                >
-                  Tim Green
-                </a>
-                {" – every 2nd Sunday. We delve into a personal selection of music, field recordings, sounds & spoken word."}
-              </p>
             </div>
 
-            <div className="border border-[var(--border)]">
-              <div className="px-4 py-3 border-b border-[var(--border)]">
-                <div className="text-[9px] tracking-widest uppercase mb-1" style={{ color: "var(--text-dim)" }}>
-                  Episodes
-                </div>
-                <div className="text-lg font-medium tabular-nums" style={{ color: "var(--text)" }}>
+            {/* About text */}
+            <p className="text-[14px] font-light text-black leading-[1.6] mb-8">
+              Bamboo House is two hours of slow-radio by two friends –{" "}
+              <a href="https://martynriley.co.uk/" target="_blank" rel="noopener noreferrer"
+                className="underline underline-offset-2 hover:text-[#E70000] transition-colors">
+                Martyn Riley
+              </a>
+              {" & "}
+              <a href="https://timgreenstudio.cargo.site/" target="_blank" rel="noopener noreferrer"
+                className="underline underline-offset-2 hover:text-[#E70000] transition-colors">
+                Tim Green
+              </a>
+              {" – on the second Sunday of the month. We each take an hour to delve into a personal selection of music, field recordings, sounds & spoken word."}
+            </p>
+
+            {/* Stats box */}
+            <div className="border border-black mb-8">
+              <div className="px-4 pt-3 pb-2">
+                <div className="text-[11px] uppercase tracking-widest text-[#999] mb-1">Episodes</div>
+                <div
+                  className="font-black leading-none"
+                  style={{ fontSize: 80, letterSpacing: "-4px", lineHeight: 1 }}
+                >
                   {loadingRecent ? shows.length : allShows.length}
                 </div>
               </div>
-              <div className="px-4 py-3 border-b border-[var(--border)]">
-                <div className="text-[9px] tracking-widest uppercase mb-1" style={{ color: "var(--text-dim)" }}>
-                  Since
-                </div>
-                <div className="text-[11px] leading-snug" style={{ color: "var(--text)" }}>
-                  March 2021
-                </div>
+              <div className="border-t border-dashed border-black border-opacity-20 px-4 py-3">
+                <div className="text-[11px] uppercase tracking-widest text-[#999] mb-1">Since</div>
+                <div className="text-[14px]">March 2021</div>
               </div>
-              <div className="px-4 py-3">
-                <div className="text-[9px] tracking-widest uppercase mb-1" style={{ color: "var(--text-dim)" }}>
-                  Broadcast
-                </div>
-                <div className="text-[11px] leading-snug" style={{ color: "var(--text)" }}>
-                  Monthly · Second Sunday of the month
-                </div>
+              <div className="border-t border-dashed border-black border-opacity-20 px-4 py-3">
+                <div className="text-[11px] uppercase tracking-widest text-[#999] mb-1">Broadcast</div>
+                <div className="text-[14px]">Monthly • Every second Sunday</div>
               </div>
             </div>
 
-            <div className="hidden lg:block mt-6 space-y-2">
-              <a
-                href="https://www.mixcloud.com/MusicBoxRadioUK/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block text-[10px] tracking-widest uppercase text-[var(--green)] hover:opacity-70 transition-opacity"
-              >
+            {/* Links */}
+            <div className="hidden lg:flex flex-col gap-2">
+              <a href="https://www.mixcloud.com/MusicBoxRadioUK/" target="_blank" rel="noopener noreferrer"
+                className="text-[13px] uppercase tracking-widest text-black hover:text-[#E70000] transition-colors">
                 MusicBoxRadioUK ↗
               </a>
-              <a
-                href="https://martynriley.co.uk/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block text-[10px] tracking-widest uppercase text-[var(--green)] hover:opacity-70 transition-opacity"
-              >
+              <a href="https://martynriley.co.uk/" target="_blank" rel="noopener noreferrer"
+                className="text-[13px] uppercase tracking-widest text-black hover:text-[#E70000] transition-colors">
                 Martyn Riley ↗
               </a>
-              <a
-                href="https://timgreenstudio.cargo.site/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block text-[10px] tracking-widest uppercase text-[var(--green)] hover:opacity-70 transition-opacity"
-              >
+              <a href="https://timgreenstudio.cargo.site/" target="_blank" rel="noopener noreferrer"
+                className="text-[13px] uppercase tracking-widest text-black hover:text-[#E70000] transition-colors">
                 Tim Green ↗
               </a>
             </div>
           </div>
         </aside>
 
-        {/* Show list */}
+        {/* Main: year filters + show list */}
         <main className="flex-1 min-w-0">
-          {/* Toolbar: label + year filter */}
-          <div className="flex items-center justify-between mb-4 gap-3">
-            <h2 className="hidden sm:block text-[9px] tracking-widest uppercase shrink-0" style={{ color: "var(--text-dim)" }}>
-              All Episodes
-            </h2>
-            <div className="flex items-center gap-1 flex-wrap justify-end">
+          {/* Year filters */}
+          <div className="flex items-center justify-end gap-1 mb-4 flex-wrap">
+            <button
+              onClick={() => setSelectedYear(null)}
+              className={`text-[13px] uppercase tracking-widest px-3 py-1 transition-colors ${
+                selectedYear === null
+                  ? "bg-black text-white"
+                  : "text-[#999] hover:text-[#E70000]"
+              }`}
+            >
+              All
+            </button>
+            {years.map((y) => (
               <button
-                onClick={() => setSelectedYear(null)}
-                className={`text-[9px] tracking-widest uppercase px-2 py-1 transition-colors ${
-                  selectedYear === null
-                    ? "text-[var(--green)] border border-[var(--green)]"
-                    : "text-[var(--text-dim)] border border-transparent hover:text-[var(--text-muted)]"
+                key={y}
+                onClick={() => setSelectedYear(y === selectedYear ? null : y)}
+                className={`text-[13px] uppercase tracking-widest px-3 py-1 tabular-nums transition-colors ${
+                  selectedYear === y
+                    ? "bg-black text-white"
+                    : "text-[#999] hover:text-[#E70000]"
                 }`}
               >
-                All
+                {y}
               </button>
-              {years.map((y) => (
-                <button
-                  key={y}
-                  onClick={() => setSelectedYear(y === selectedYear ? null : y)}
-                  className={`text-[9px] tracking-widest uppercase px-2 py-1 tabular-nums transition-colors ${
-                    selectedYear === y
-                      ? "text-[var(--green)] border border-[var(--green)]"
-                      : "text-[var(--text-dim)] border border-transparent hover:text-[var(--text-muted)]"
-                  }`}
-                >
-                  {y}
-                </button>
-              ))}
-            </div>
+            ))}
           </div>
 
           {loadingRecent && (
-            <div className="text-[9px] tracking-widest uppercase mb-3" style={{ color: "var(--text-dim)" }}>
+            <p className="text-[11px] uppercase tracking-widest text-[#999] mb-3">
               Checking for new episodes…
-            </div>
+            </p>
           )}
 
-          <div className="space-y-px">
+          {/* Show list — collapse adjacent borders */}
+          <div className="border-t border-black">
             {filteredShows.map((show) => (
-              <div key={show.id} ref={selectedId === show.id ? selectedRef : undefined}>
+              <div key={show.id} ref={selectedId === show.id ? selectedRef : undefined}
+                className="border-b border-black">
                 <ShowCard
                   show={show}
                   isSelected={selectedId === show.id}
@@ -591,15 +542,11 @@ export default function Home() {
         </main>
       </div>
 
-      <footer className="border-t border-[var(--border)] px-6 py-4 mt-16">
-        <p className="text-[10px] tracking-widest uppercase" style={{ color: "var(--text-dim)" }}>
+      <footer className="border-t border-black px-6 py-4 mt-16">
+        <p className="text-[12px] uppercase tracking-widest text-[#999]">
           Bamboo House ·{" "}
-          <a
-            href="https://musicboxradio.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[var(--green)] hover:opacity-70 transition-opacity"
-          >
+          <a href="https://musicboxradio.com" target="_blank" rel="noopener noreferrer"
+            className="hover:text-[#E70000] transition-colors">
             Music Box Radio
           </a>
         </p>

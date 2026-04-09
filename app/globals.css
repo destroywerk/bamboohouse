@@ -1,17 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --green: #2C6B4A;
-  --green-light: #E8F0EB;
-  --green-mid: #4A8B68;
-  --bg: #e8eeeb;
-  --bg-body: #fefefc;
-  --surface: #FAFAF8;
-  --border: #E0DDD7;
-  --text: #1A1A18;
-  --text-muted: #706E66;
-  --text-dim: #A09E96;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --red: #E70000;
+  --red-10: rgba(231, 0, 0, 0.1);
+  --black: #000000;
+  --white: #ffffff;
+  --grey: #999999;
+  --grey-light: #f5f5f5;
 }
 
 * {
@@ -19,32 +14,14 @@
 }
 
 body {
-  background-color: var(--bg);
-  color: var(--text);
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 13px;
-  line-height: 1.6;
+  background: #fff;
+  color: #000;
+  font-size: 14px;
+  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: var(--green);
+  background: #E70000;
   color: #fff;
-}
-
-/* Mixcloud widget iframe overrides */
-.mixcloud-widget {
-  border: none;
-  width: 100%;
-}
-
-/* Pulsing ring animation for logo mark */
-@keyframes pulse-ring-outer {
-  0%, 100% { opacity: 0.2; transform: scale(1); transform-origin: center; }
-  50%       { opacity: 0.5; transform: scale(1.06); transform-origin: center; }
-}
-
-@keyframes pulse-ring-inner {
-  0%, 100% { opacity: 0.4; transform: scale(1); transform-origin: center; }
-  50%       { opacity: 0.75; transform: scale(1.04); transform-origin: center; }
 }

@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
-import { GeistMono } from "geist/font/mono";
+import { Inter } from "next/font/google";
 import "./globals.css";
+
+const inter = Inter({ subsets: ["latin"], weight: ["300", "400", "900"] });
 
 export const metadata: Metadata = {
   title: "Bamboo House Radio",
@@ -27,7 +29,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${GeistMono.variable} antialiased`} suppressHydrationWarning>
+      <body className={`${inter.className} antialiased`} suppressHydrationWarning>
         {children}
       </body>
     </html>
