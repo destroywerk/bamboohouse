@@ -397,7 +397,7 @@ export default function Home() {
   return (
     <div className="min-h-screen" style={{ background: "var(--bg-body)" }}>
       {/* Header */}
-      <header className="border-b border-[var(--border)] pl-12 pr-6 py-5 flex items-center justify-between" style={{ background: "var(--bg)" }}>
+      <header className="border-b border-[var(--border)] pl-6 sm:pl-12 pr-6 py-5 flex items-center justify-between" style={{ background: "var(--bg)" }}>
         <div
           role="heading"
           aria-level={1}
@@ -418,7 +418,7 @@ export default function Home() {
 
       <div className="max-w-6xl mx-auto px-6 py-8 lg:flex lg:gap-12">
         {/* Sidebar */}
-        <aside className="lg:w-64 lg:shrink-0 mb-10 lg:mb-0">
+        <aside className="lg:w-64 lg:shrink-0 mb-4 lg:mb-0">
           <div className="lg:sticky lg:top-8">
             <div className="mb-6">
               {/* On mobile: logo + links share a row. On lg: logo sits alone above the text */}
@@ -535,7 +535,7 @@ export default function Home() {
         <main className="flex-1 min-w-0">
           {/* Toolbar: label + year filter */}
           <div className="flex items-center justify-between mb-4 gap-3">
-            <h2 className="text-[9px] tracking-widest uppercase shrink-0" style={{ color: "var(--text-dim)" }}>
+            <h2 className="hidden sm:block text-[9px] tracking-widest uppercase shrink-0" style={{ color: "var(--text-dim)" }}>
               All Episodes
             </h2>
             <div className="flex items-center gap-1 flex-wrap justify-end">
