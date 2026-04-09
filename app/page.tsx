@@ -633,7 +633,7 @@ export default function Home() {
                       <div className="border-t border-black">
                         <ShowPlayer
                           show={show}
-                          autoOpenTracklist={false}
+                          autoOpenTracklist={show.id === allShows[0]?.id}
                         />
                       </div>
                     )}
