@@ -107,7 +107,7 @@ function ShowCard({
         </span>
 
         <span
-          className="absolute text-[13px] sm:text-[14px] text-black top-1/2 -translate-y-1/2 sm:top-[16px] sm:translate-y-0 left-[185px] sm:left-[200px]"
+          className={`absolute text-[13px] sm:text-[14px] text-black top-1/2 -translate-y-1/2 sm:top-[16px] sm:translate-y-0 sm:left-[200px] sm:right-auto ${show.photo ? "right-[112px]" : "right-[12px]"}`}
           style={{ fontWeight: hovered ? 500 : 400 }}
         >
           {dateStr}
