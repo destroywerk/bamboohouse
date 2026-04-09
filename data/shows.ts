@@ -30,7 +30,15 @@ export const shows: Show[] = [
     displayDate: "08.03.26",
     mixcloudKey: "/MusicBoxRadioUK/bamboo-house-sunday-8th-march-2026/",
     tracklist: {
-      martyn: UNAVAILABLE,
+      martyn: [
+        { artist: "Martyn Riley, Beth Robertson, Jeremy Kent", title: "Lament" },
+        { artist: "Seefeel", title: "Ever No Way" },
+        { artist: "Claire M Singer", title: "The Molendinar" },
+        { artist: "Martyn Riley", title: "Unknown" },
+        { artist: "Coil", title: "The Wraiths And Strays Of Paris" },
+        { artist: "Kinn", title: "Have We Recovered, from Our Dreaming?" },
+        { artist: "Kassel Jaeger, Jim O'Rourke", title: "Wakes on Cerulean A" },
+      ],
       tim: [
         { artist: "Gavin Bryars", title: "Leeds Bells 1" },
         { artist: "Gavin Bryars, Roger Heaton", title: "Lauda 3 - Third Version" },
