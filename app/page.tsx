@@ -436,7 +436,7 @@ export default function Home() {
       const number = i + 1;
       const photo = s.photo ?? photoByNumber[number];
       const quote = s.quote ?? quoteByNumber[number];
-      const tracklist = s.tracklist ?? tracklistByNumber[number];
+      const tracklist = tracklistByNumber[number] ?? s.tracklist;
       return { ...s, number, ...(photo ? { photo } : {}), ...(quote ? { quote } : {}), ...(tracklist ? { tracklist } : {}) };
     });
 
