@@ -25,3 +25,13 @@ body {
   background: #E70000;
   color: #fff;
 }
+
+@keyframes pulse-ring-outer {
+  0%, 100% { opacity: 0.2; transform: scale(1); transform-origin: center; }
+  50%       { opacity: 0.5; transform: scale(1.06); transform-origin: center; }
+}
+
+@keyframes pulse-ring-inner {
+  0%, 100% { opacity: 0.4; transform: scale(1); transform-origin: center; }
+  50%       { opacity: 0.75; transform: scale(1.04); transform-origin: center; }
+}

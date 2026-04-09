@@ -37,8 +37,16 @@ function parseBroadcastDate(name: string): string | null {
 function LogoMark({ size = 40 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 40 40" fill="none">
-      <circle cx="20" cy="20" r="18" stroke="#E70000" strokeWidth="1.5" fill="none" opacity="0.3" />
-      <circle cx="20" cy="20" r="12" stroke="#E70000" strokeWidth="1.5" fill="none" opacity="0.6" />
+      <circle
+        cx="20" cy="20" r="18"
+        stroke="#E70000" strokeWidth="1.5" fill="none"
+        style={{ animation: "pulse-ring-outer 3.5s ease-in-out infinite" }}
+      />
+      <circle
+        cx="20" cy="20" r="12"
+        stroke="#E70000" strokeWidth="1.5" fill="none"
+        style={{ animation: "pulse-ring-inner 3.5s ease-in-out infinite 0.4s" }}
+      />
       <circle cx="20" cy="20" r="5.5" fill="#E70000" />
     </svg>
   );
@@ -54,6 +62,8 @@ function ShowCard({
   isSelected: boolean;
   onClick: () => void;
 }) {
+  const [hovered, setHovered] = useState(false);
+
   const hasTracklist =
     show.tracklist &&
     ((Array.isArray(show.tracklist.tim) && show.tracklist.tim.length > 0) ||
@@ -62,23 +72,17 @@ function ShowCard({
   const dateStr = formatDisplayDate(show.date);
   const numStr = String(show.number);
 
-  if (isSelected) {
+    if (isSelected) {
     return (
       <button
         onClick={onClick}
         className="w-full flex items-center justify-between px-5 overflow-hidden"
         style={{ height: 90, background: "#E70000" }}
       >
-        <span
-          className="font-black text-white leading-none"
-          style={{ fontSize: "clamp(36px, 5.5vw, 64px)", letterSpacing: "-3.2px" }}
-        >
+        <span className="font-black text-black leading-none" style={{ fontSize: "clamp(36px, 5.5vw, 64px)", letterSpacing: "-0.05em" }}>
           BH{String(show.number).padStart(2, "0")}
         </span>
-        <span
-          className="font-black text-white leading-none"
-          style={{ fontSize: "clamp(36px, 5.5vw, 64px)", letterSpacing: "-3.2px" }}
-        >
+        <span className="font-black text-black leading-none" style={{ fontSize: "clamp(36px, 5.5vw, 64px)", letterSpacing: "-0.05em" }}>
           {dateStr}
         </span>
       </button>
@@ -88,47 +92,54 @@ function ShowCard({
   return (
     <button
       onClick={onClick}
-      className="group w-full relative overflow-hidden border border-black bg-white transition-colors duration-100"
-      style={{ height: 90 }}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLButtonElement).style.background = "rgba(231,0,0,0.1)";
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLButtonElement).style.background = "#ffffff";
-      }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="w-full relative overflow-hidden transition-colors duration-100"
+      style={{ height: 90, background: hovered ? "rgba(231,0,0,0.1)" : "#ffffff" }}
     >
       {/* Overflowing number */}
       <span
-        className="absolute font-black leading-none select-none pointer-events-none transition-colors duration-100 group-hover:text-[#E70000]"
+        className="absolute font-black leading-none select-none pointer-events-none"
         style={{
-          fontSize: "clamp(64px, 10vw, 128px)",
-          letterSpacing: "-6.4px",
-          color: "#000",
-          left: -8,
+          fontSize: 150,
+          letterSpacing: "-8px",
+          color: hovered ? "#E70000" : "#000",
+          left: -16,
           top: "50%",
           transform: "translateY(-50%)",
+          transition: "color 0.1s",
         }}
       >
         {numStr}
       </span>
 
-      {/* Content: date + quote */}
-      <div
-        className="absolute inset-y-0 flex flex-col justify-center gap-1 min-w-0"
-        style={{ left: "26%", right: show.photo ? 110 : 16 }}
+      {/* Date — vertically centred, 10px left of previous position */}
+      <span
+        className="absolute text-[13px] sm:text-[14px] text-black"
+        style={{ left: 200, top: "50%", transform: "translateY(-50%)" }}
       >
-        <div className="flex items-center justify-between gap-3">
-          <span className="text-[13px] sm:text-[14px] text-[#999] shrink-0">{dateStr}</span>
-          {hasTracklist && (
-            <span className="text-[12px] sm:text-[13px] text-[#999] shrink-0">Tracklist</span>
-          )}
-        </div>
-        {show.quote && (
-          <p className="text-[12px] sm:text-[13px] text-[#999] truncate leading-snug">
-            &ldquo;{show.quote}&rdquo;
-          </p>
-        )}
-      </div>
+        {dateStr}
+      </span>
+
+      {/* Quote — hidden on mobile */}
+      {show.quote && (
+        <span
+          className="hidden sm:block absolute text-[12px] sm:text-[13px] text-[#999] overflow-hidden whitespace-nowrap text-left"
+          style={{ left: 210, top: 54, right: show.photo ? 110 : 16, textOverflow: "ellipsis", display: "block" }}
+        >
+          &ldquo;{show.quote}&rdquo;
+        </span>
+      )}
+
+      {/* Tracklist indicator — hidden on mobile */}
+      {hasTracklist && (
+        <span
+          className="hidden sm:block absolute text-[12px] sm:text-[13px] text-[#999]"
+          style={{ right: show.photo ? 126 : 26, top: 22 }}
+        >
+          Tracklist
+        </span>
+      )}
 
       {/* Photo thumbnail */}
       {show.photo && (
@@ -200,7 +211,7 @@ function ShowPlayer({
         : show.number % 2 !== 0;
 
   return (
-    <div className="border border-t-0 border-black bg-white px-5 pt-5 pb-6">
+    <div className="bg-white px-5 pt-5 pb-6">
       {show.quote && (
         <p className="text-[14px] font-light text-[#999] leading-[20px] mb-5">
           &ldquo;{show.quote}&rdquo;
@@ -389,23 +400,25 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
-      <header className="flex items-center justify-between px-6 bg-black" style={{ height: 52 }}>
-        <div
-          role="heading"
-          aria-level={1}
-          className="text-[14px] uppercase tracking-[0.15em] font-light text-white leading-none"
-        >
-          Bamboo House
+      {/* Header — inner div matches content column widths */}
+      <header className="bg-black" style={{ height: 52 }} suppressHydrationWarning>
+        <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between" suppressHydrationWarning>
+          <div
+            role="heading"
+            aria-level={1}
+            className="text-[14px] uppercase tracking-[0.15em] font-light text-white leading-none"
+          >
+            Bamboo House
+          </div>
+          <a
+            href="https://www.mixcloud.com/MusicBoxRadioUK/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[13px] uppercase tracking-widest text-white hover:text-[#E70000] transition-colors"
+          >
+            Mixcloud ↗
+          </a>
         </div>
-        <a
-          href="https://www.mixcloud.com/MusicBoxRadioUK/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-[13px] uppercase tracking-widest text-white hover:text-[#E70000] transition-colors"
-        >
-          Mixcloud ↗
-        </a>
       </header>
 
       <div className="max-w-7xl mx-auto px-6 py-8 lg:flex lg:gap-16">
@@ -450,10 +463,7 @@ export default function Home() {
             <div className="border border-black mb-8">
               <div className="px-4 pt-3 pb-2">
                 <div className="text-[11px] uppercase tracking-widest text-[#999] mb-1">Episodes</div>
-                <div
-                  className="font-black leading-none"
-                  style={{ fontSize: 80, letterSpacing: "-4px", lineHeight: 1 }}
-                >
+                <div className="font-black leading-none" style={{ fontSize: 64, letterSpacing: "-0.05em" }}>
                   {loadingRecent ? shows.length : allShows.length}
                 </div>
               </div>
@@ -488,13 +498,11 @@ export default function Home() {
         {/* Main: year filters + show list */}
         <main className="flex-1 min-w-0">
           {/* Year filters */}
-          <div className="flex items-center justify-end gap-1 mb-4 flex-wrap">
+          <div className="flex items-center justify-end gap-0.5 sm:gap-1 mb-4 flex-nowrap overflow-x-auto">
             <button
               onClick={() => setSelectedYear(null)}
-              className={`text-[13px] uppercase tracking-widest px-3 py-1 transition-colors ${
-                selectedYear === null
-                  ? "bg-black text-white"
-                  : "text-[#999] hover:text-[#E70000]"
+              className={`text-[10px] sm:text-[13px] uppercase tracking-widest px-1.5 sm:px-3 py-0.5 sm:py-1 shrink-0 transition-colors ${
+                selectedYear === null ? "bg-black text-white" : "text-[#999] hover:text-[#E70000]"
               }`}
             >
               All
@@ -503,10 +511,8 @@ export default function Home() {
               <button
                 key={y}
                 onClick={() => setSelectedYear(y === selectedYear ? null : y)}
-                className={`text-[13px] uppercase tracking-widest px-3 py-1 tabular-nums transition-colors ${
-                  selectedYear === y
-                    ? "bg-black text-white"
-                    : "text-[#999] hover:text-[#E70000]"
+                className={`text-[10px] sm:text-[13px] uppercase tracking-widest px-1.5 sm:px-3 py-0.5 sm:py-1 tabular-nums shrink-0 transition-colors ${
+                  selectedYear === y ? "bg-black text-white" : "text-[#999] hover:text-[#E70000]"
                 }`}
               >
                 {y}
@@ -520,21 +526,26 @@ export default function Home() {
             </p>
           )}
 
-          {/* Show list — collapse adjacent borders */}
-          <div className="border-t border-black">
+          {/* Show list — top/left/right from container, each item owns its bottom border */}
+          <div className="border-t border-l border-r border-black">
             {filteredShows.map((show) => (
-              <div key={show.id} ref={selectedId === show.id ? selectedRef : undefined}
-                className="border-b border-black">
+              <div
+                key={show.id}
+                ref={selectedId === show.id ? selectedRef : undefined}
+                className="border-b border-black"
+              >
                 <ShowCard
                   show={show}
                   isSelected={selectedId === show.id}
                   onClick={() => handleSelect(show.id)}
                 />
                 {selectedId === show.id && (
-                  <ShowPlayer
-                    show={show}
-                    autoOpenTracklist={show.id === allShows[0]?.id}
-                  />
+                  <div className="border-t border-black">
+                    <ShowPlayer
+                      show={show}
+                      autoOpenTracklist={show.id === allShows[0]?.id}
+                    />
+                  </div>
                 )}
               </div>
             ))}
@@ -542,14 +553,17 @@ export default function Home() {
         </main>
       </div>
 
-      <footer className="border-t border-black px-6 py-4 mt-16">
-        <p className="text-[12px] uppercase tracking-widest text-[#999]">
-          Bamboo House ·{" "}
-          <a href="https://musicboxradio.com" target="_blank" rel="noopener noreferrer"
-            className="hover:text-[#E70000] transition-colors">
-            Music Box Radio
-          </a>
-        </p>
+      {/* Footer — aligned with content columns */}
+      <footer className="border-t border-black mt-16">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <p className="text-[12px] uppercase tracking-widest text-black">
+            Bamboo House ·{" "}
+            <a href="https://musicboxradio.com" target="_blank" rel="noopener noreferrer"
+              className="text-[#999] hover:text-[#E70000] transition-colors">
+              Music Box Radio
+            </a>
+          </p>
+        </div>
       </footer>
     </div>
   );
