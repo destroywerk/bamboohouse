@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
+import { flushSync } from "react-dom";
 import { shows, getMixcloudEmbedUrl, type Show, type ShowTracklist } from "@/data/shows";
 
 type MixcloudShow = {
@@ -72,80 +73,103 @@ function ShowCard({
   const dateStr = formatDisplayDate(show.date);
   const numStr = String(show.number);
 
-    if (isSelected) {
-    return (
-      <button
-        onClick={onClick}
-        className="w-full flex items-center justify-between px-5 overflow-hidden"
-        style={{ height: 90, background: "#E70000" }}
-      >
-        <span className="font-black text-black leading-none" style={{ fontSize: "clamp(36px, 5.5vw, 64px)", letterSpacing: "-0.05em" }}>
-          BH{String(show.number).padStart(2, "0")}
-        </span>
-        <span className="font-black text-black leading-none" style={{ fontSize: "clamp(36px, 5.5vw, 64px)", letterSpacing: "-0.05em" }}>
-          {dateStr}
-        </span>
-      </button>
-    );
-  }
-
   return (
     <button
       onClick={onClick}
-      onMouseEnter={() => setHovered(true)}
+      onMouseEnter={() => !isSelected && setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="block w-full relative overflow-hidden transition-colors duration-100"
-      style={{ height: 90, background: hovered ? "rgba(231,0,0,0.1)" : "#ffffff" }}
+      className="block w-full relative overflow-hidden"
+      style={{
+        height: 90,
+        background: isSelected ? "#E70000" : hovered ? "rgba(231,0,0,0.1)" : "#ffffff",
+        transition: "background-color 300ms ease",
+      }}
     >
-      {/* Overflowing number — 140px on mobile, 150px on desktop; more left on mobile */}
-      <span
-        className="absolute font-black leading-none select-none pointer-events-none text-[140px] sm:text-[150px] left-[-26px] sm:left-[-16px]"
+      {/* ── Collapsed content layer ── */}
+      <div
+        className="absolute inset-0 pointer-events-none"
         style={{
-          letterSpacing: "-8px",
-          color: hovered ? "#E70000" : "#000",
-          top: "50%",
-          transform: "translateY(-50%)",
-          transition: "color 0.1s",
+          opacity: isSelected ? 0 : 1,
+          transition: isSelected ? "opacity 180ms ease" : "opacity 250ms ease 60ms",
         }}
       >
-        {numStr}
-      </span>
+        <span
+          className="absolute font-black leading-none select-none text-[140px] sm:text-[150px] left-[-26px] sm:left-[-16px]"
+          style={{
+            letterSpacing: "-8px",
+            color: hovered ? "#E70000" : "#000",
+            top: "50%",
+            transform: "translateY(-50%)",
+            transition: "color 0.1s",
+          }}
+        >
+          {numStr}
+        </span>
 
-      {/* Date — centred vertically on mobile, top-aligned on desktop */}
-      <span
-        className="absolute text-[13px] sm:text-[14px] text-black top-1/2 -translate-y-1/2 sm:top-[20px] sm:translate-y-0 left-[185px] sm:left-[200px] transition-all duration-100"
-        style={{ fontWeight: hovered ? 500 : 400 }}
+        <span
+          className="absolute text-[13px] sm:text-[14px] text-black top-1/2 -translate-y-1/2 sm:top-[16px] sm:translate-y-0 left-[185px] sm:left-[200px]"
+          style={{ fontWeight: hovered ? 500 : 400 }}
+        >
+          {dateStr}
+        </span>
+
+        {show.quote && (
+          <span
+            className="hidden sm:block absolute text-[12px] sm:text-[13px] overflow-hidden whitespace-nowrap text-left"
+            style={{
+              left: 200, top: 52,
+              right: show.photo ? 126 : 26,
+              textOverflow: "ellipsis",
+              color: hovered ? "#000" : "#999",
+              transition: "color 0.1s",
+            }}
+          >
+            &ldquo;{show.quote}&rdquo;
+          </span>
+        )}
+
+        {hasTracklist && (
+          <span
+            className="hidden sm:block absolute text-[12px] sm:text-[13px]"
+            style={{
+              right: show.photo ? 126 : 26, top: 16,
+              color: hovered ? "#000" : "#999",
+              transition: "color 0.1s",
+            }}
+          >
+            Tracklist
+          </span>
+        )}
+
+        {show.photo && (
+          <div className="absolute right-0 top-0 h-full overflow-hidden" style={{ width: 100 }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={show.photo} alt="" className="w-full h-full object-cover" />
+          </div>
+        )}
+      </div>
+
+      {/* ── Expanded content layer ── */}
+      <div
+        className="absolute inset-0 flex items-center justify-between px-5 pointer-events-none"
+        style={{
+          opacity: isSelected ? 1 : 0,
+          transition: isSelected ? "opacity 220ms ease 80ms" : "opacity 150ms ease",
+        }}
       >
-        {dateStr}
-      </span>
-
-      {/* Quote — hidden on mobile, absolute bottom on desktop */}
-      {show.quote && (
         <span
-          className="hidden sm:block absolute text-[12px] sm:text-[13px] overflow-hidden whitespace-nowrap text-left transition-colors duration-100"
-          style={{ left: 200, top: 52, right: show.photo ? 126 : 26, textOverflow: "ellipsis", color: hovered ? "#000" : "#999" }}
+          className="font-black text-black leading-none"
+          style={{ fontSize: "clamp(36px, 5.5vw, 64px)", letterSpacing: "-0.05em" }}
         >
-          &ldquo;{show.quote}&rdquo;
+          BH{String(show.number).padStart(2, "0")}
         </span>
-      )}
-
-      {/* Tracklist indicator — hidden on mobile */}
-      {hasTracklist && (
         <span
-          className="hidden sm:block absolute text-[12px] sm:text-[13px] transition-colors duration-100"
-          style={{ right: show.photo ? 126 : 26, top: 20, color: hovered ? "#000" : "#999" }}
+          className="font-black text-black leading-none"
+          style={{ fontSize: "clamp(36px, 5.5vw, 64px)", letterSpacing: "-0.05em" }}
         >
-          Tracklist
+          {dateStr}
         </span>
-      )}
-
-      {/* Photo thumbnail */}
-      {show.photo && (
-        <div className="absolute right-0 top-0 h-full overflow-hidden" style={{ width: 100 }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={show.photo} alt="" className="w-full h-full object-cover" />
-        </div>
-      )}
+      </div>
     </button>
   );
 }
@@ -191,11 +215,18 @@ function ShowPlayer({
   autoOpenTracklist?: boolean;
 }) {
   const [tracklistOpen, setTracklistOpen] = useState(false);
+  const [ready, setReady] = useState(false);
   const embedUrl = getMixcloudEmbedUrl(show.mixcloudKey);
   const hasAnyTracklist =
     show.tracklist !== undefined &&
     ((Array.isArray(show.tracklist.tim) && show.tracklist.tim.length > 0) ||
       (Array.isArray(show.tracklist.martyn) && show.tracklist.martyn.length > 0));
+
+  // Delay rendering content until card animation has settled, then fade in together
+  useEffect(() => {
+    const t = setTimeout(() => setReady(true), 200);
+    return () => clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     if (autoOpenTracklist && hasAnyTracklist) setTracklistOpen(true);
@@ -209,9 +240,12 @@ function ShowPlayer({
         : show.number % 2 !== 0;
 
   return (
-    <div className="bg-white px-5 pt-5 pb-6">
+    <div
+      className="bg-white px-5 pt-5 pb-6"
+      style={{ opacity: ready ? 1 : 0, transition: "opacity 500ms ease" }}
+    >
       {show.quote && (
-        <p className="text-[14px] font-light text-[#999] leading-[20px] mb-5">
+        <p className="text-[14px] font-light text-[#666] leading-[20px] mb-5">
           &ldquo;{show.quote}&rdquo;
         </p>
       )}
@@ -259,21 +293,30 @@ function ShowPlayer({
                 </svg>
                 {tracklistOpen ? "Hide" : "Show"} tracklisting
               </button>
-              {tracklistOpen && (
-                <div className="border-t border-black border-opacity-10 pt-4">
-                  {timFirst ? (
-                    <>
-                      {show.tracklist?.tim !== undefined && <TracklistSection label="Tim" tracks={show.tracklist.tim} />}
-                      {show.tracklist?.martyn !== undefined && <TracklistSection label="Martyn" tracks={show.tracklist.martyn} />}
-                    </>
-                  ) : (
-                    <>
-                      {show.tracklist?.martyn !== undefined && <TracklistSection label="Martyn" tracks={show.tracklist.martyn} />}
-                      {show.tracklist?.tim !== undefined && <TracklistSection label="Tim" tracks={show.tracklist.tim} />}
-                    </>
-                  )}
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateRows: tracklistOpen ? "1fr" : "0fr",
+                  transition: "grid-template-rows 400ms ease, opacity 400ms ease",
+                  opacity: tracklistOpen ? 1 : 0,
+                }}
+              >
+                <div style={{ overflow: "hidden" }}>
+                  <div className="border-t border-black border-opacity-10 pt-4">
+                    {timFirst ? (
+                      <>
+                        {show.tracklist?.tim !== undefined && <TracklistSection label="Tim" tracks={show.tracklist.tim} />}
+                        {show.tracklist?.martyn !== undefined && <TracklistSection label="Martyn" tracks={show.tracklist.martyn} />}
+                      </>
+                    ) : (
+                      <>
+                        {show.tracklist?.martyn !== undefined && <TracklistSection label="Martyn" tracks={show.tracklist.martyn} />}
+                        {show.tracklist?.tim !== undefined && <TracklistSection label="Tim" tracks={show.tracklist.tim} />}
+                      </>
+                    )}
+                  </div>
                 </div>
-              )}
+              </div>
             </div>
           ) : (
             <p className="text-[13px] font-light text-[#999]">No tracklisting available.</p>
@@ -291,6 +334,7 @@ export default function Home() {
   const [recentShows, setRecentShows] = useState<MixcloudShow[]>([]);
   const [loadingRecent, setLoadingRecent] = useState(true);
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
+  const [openedIds, setOpenedIds] = useState<Set<string>>(new Set());
   const selectedRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -370,7 +414,9 @@ export default function Home() {
   useEffect(() => {
     if (!loadingRecent && !hasAutoOpened.current && allShows.length > 0) {
       hasAutoOpened.current = true;
-      setSelectedId(allShows[0].id);
+      const firstId = allShows[0].id;
+      setOpenedIds(new Set([firstId]));
+      setSelectedId(firstId);
     }
   }, [loadingRecent, allShows]);
 
@@ -388,12 +434,17 @@ export default function Home() {
     hasAutoOpened.current = true;
     if (selectedId === id) {
       setSelectedId(null);
-    } else {
-      setSelectedId(id);
-      setTimeout(() => {
-        selectedRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-      }, 50);
+      return;
     }
+    // If content hasn't been rendered yet, mount it first (at grid-rows: 0fr),
+    // then in the next paint expand — this prevents layout-reflow stutter
+    if (!openedIds.has(id)) {
+      flushSync(() => setOpenedIds((prev) => new Set([...prev, id])));
+    }
+    setSelectedId(id);
+    setTimeout(() => {
+      selectedRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }, 50);
   };
 
   return (
@@ -537,14 +588,25 @@ export default function Home() {
                   isSelected={selectedId === show.id}
                   onClick={() => handleSelect(show.id)}
                 />
-                {selectedId === show.id && (
-                  <div className="border-t border-black">
-                    <ShowPlayer
-                      show={show}
-                      autoOpenTracklist={show.id === allShows[0]?.id}
-                    />
+                {/* Animated panel — height transitions via grid, content stays mounted once opened */}
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateRows: selectedId === show.id ? "1fr" : "0fr",
+                    transition: "grid-template-rows 450ms cubic-bezier(0.4, 0, 0.2, 1)",
+                  }}
+                >
+                  <div style={{ overflow: "hidden" }}>
+                    {openedIds.has(show.id) && (
+                      <div className="border-t border-black">
+                        <ShowPlayer
+                          show={show}
+                          autoOpenTracklist={false}
+                        />
+                      </div>
+                    )}
                   </div>
-                )}
+                </div>
               </div>
             ))}
           </div>

@@ -26,6 +26,11 @@ body {
   color: #fff;
 }
 
+@keyframes panel-enter {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 @keyframes pulse-ring-outer {
   0%, 100% { opacity: 0.2; transform: scale(1); transform-origin: center; }
   50%       { opacity: 0.5; transform: scale(1.06); transform-origin: center; }
