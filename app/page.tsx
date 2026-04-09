@@ -94,17 +94,15 @@ function ShowCard({
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className="w-full relative overflow-hidden transition-colors duration-100"
+      className="block w-full relative overflow-hidden transition-colors duration-100"
       style={{ height: 90, background: hovered ? "rgba(231,0,0,0.1)" : "#ffffff" }}
     >
-      {/* Overflowing number */}
+      {/* Overflowing number — 140px on mobile, 150px on desktop; more left on mobile */}
       <span
-        className="absolute font-black leading-none select-none pointer-events-none"
+        className="absolute font-black leading-none select-none pointer-events-none text-[140px] sm:text-[150px] left-[-26px] sm:left-[-16px]"
         style={{
-          fontSize: 150,
           letterSpacing: "-8px",
           color: hovered ? "#E70000" : "#000",
-          left: -16,
           top: "50%",
           transform: "translateY(-50%)",
           transition: "color 0.1s",
@@ -113,19 +111,19 @@ function ShowCard({
         {numStr}
       </span>
 
-      {/* Date — vertically centred, 10px left of previous position */}
+      {/* Date — centred vertically on mobile, top-aligned on desktop */}
       <span
-        className="absolute text-[13px] sm:text-[14px] text-black"
-        style={{ left: 200, top: "50%", transform: "translateY(-50%)" }}
+        className="absolute text-[13px] sm:text-[14px] text-black top-1/2 -translate-y-1/2 sm:top-[20px] sm:translate-y-0 left-[185px] sm:left-[200px] transition-all duration-100"
+        style={{ fontWeight: hovered ? 500 : 400 }}
       >
         {dateStr}
       </span>
 
-      {/* Quote — hidden on mobile */}
+      {/* Quote — hidden on mobile, absolute bottom on desktop */}
       {show.quote && (
         <span
-          className="hidden sm:block absolute text-[12px] sm:text-[13px] text-[#999] overflow-hidden whitespace-nowrap text-left"
-          style={{ left: 210, top: 54, right: show.photo ? 110 : 16, textOverflow: "ellipsis", display: "block" }}
+          className="hidden sm:block absolute text-[12px] sm:text-[13px] overflow-hidden whitespace-nowrap text-left transition-colors duration-100"
+          style={{ left: 200, top: 52, right: show.photo ? 126 : 26, textOverflow: "ellipsis", color: hovered ? "#000" : "#999" }}
         >
           &ldquo;{show.quote}&rdquo;
         </span>
@@ -134,8 +132,8 @@ function ShowCard({
       {/* Tracklist indicator — hidden on mobile */}
       {hasTracklist && (
         <span
-          className="hidden sm:block absolute text-[12px] sm:text-[13px] text-[#999]"
-          style={{ right: show.photo ? 126 : 26, top: 22 }}
+          className="hidden sm:block absolute text-[12px] sm:text-[13px] transition-colors duration-100"
+          style={{ right: show.photo ? 126 : 26, top: 20, color: hovered ? "#000" : "#999" }}
         >
           Tracklist
         </span>
@@ -445,7 +443,7 @@ export default function Home() {
             </div>
 
             {/* About text */}
-            <p className="text-[14px] font-light text-black leading-[1.6] mb-8">
+            <p className="text-[13px] sm:text-[14px] font-light text-black leading-[1.6] mb-8">
               Bamboo House is two hours of slow-radio by two friends –{" "}
               <a href="https://martynriley.co.uk/" target="_blank" rel="noopener noreferrer"
                 className="underline underline-offset-2 hover:text-[#E70000] transition-colors">
@@ -469,11 +467,11 @@ export default function Home() {
               </div>
               <div className="border-t border-dashed border-black border-opacity-20 px-4 py-3">
                 <div className="text-[11px] uppercase tracking-widest text-[#999] mb-1">Since</div>
-                <div className="text-[14px]">March 2021</div>
+                <div className="text-[13px] sm:text-[14px]">March 2021</div>
               </div>
               <div className="border-t border-dashed border-black border-opacity-20 px-4 py-3">
                 <div className="text-[11px] uppercase tracking-widest text-[#999] mb-1">Broadcast</div>
-                <div className="text-[14px]">Monthly • Every second Sunday</div>
+                <div className="text-[13px] sm:text-[14px]">Monthly • Every second Sunday</div>
               </div>
             </div>
 
@@ -501,7 +499,7 @@ export default function Home() {
           <div className="flex items-center justify-end gap-0.5 sm:gap-1 mb-4 flex-nowrap overflow-x-auto">
             <button
               onClick={() => setSelectedYear(null)}
-              className={`text-[10px] sm:text-[13px] uppercase tracking-widest px-1.5 sm:px-3 py-0.5 sm:py-1 shrink-0 transition-colors ${
+              className={`text-[11px] sm:text-[13px] uppercase tracking-widest px-1.5 sm:px-3 py-0.5 sm:py-1 shrink-0 transition-colors ${
                 selectedYear === null ? "bg-black text-white" : "text-[#999] hover:text-[#E70000]"
               }`}
             >
@@ -511,7 +509,7 @@ export default function Home() {
               <button
                 key={y}
                 onClick={() => setSelectedYear(y === selectedYear ? null : y)}
-                className={`text-[10px] sm:text-[13px] uppercase tracking-widest px-1.5 sm:px-3 py-0.5 sm:py-1 tabular-nums shrink-0 transition-colors ${
+                className={`text-[11px] sm:text-[13px] uppercase tracking-widest px-1.5 sm:px-3 py-0.5 sm:py-1 tabular-nums shrink-0 transition-colors ${
                   selectedYear === y ? "bg-black text-white" : "text-[#999] hover:text-[#E70000]"
                 }`}
               >
@@ -526,13 +524,13 @@ export default function Home() {
             </p>
           )}
 
-          {/* Show list — top/left/right from container, each item owns its bottom border */}
-          <div className="border-t border-l border-r border-black">
+          {/* Show list — 8px gap between cards, each is its own bordered box */}
+          <div className="space-y-2">
             {filteredShows.map((show) => (
               <div
                 key={show.id}
                 ref={selectedId === show.id ? selectedRef : undefined}
-                className="border-b border-black"
+                className="border border-black"
               >
                 <ShowCard
                   show={show}
