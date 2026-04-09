@@ -401,11 +401,43 @@ export default function Home() {
       38: "Everyone knows that all life requires energy. But we rarely consider how dependent art and culture are on the energy that is needed to produce, practice and sustain them. What we fail to see are the usually invisible sources of energy that make our art and culture(s) possible and bring with them fundamental values that we are all constrained to live with (whether we approve of them or not).",
     };
 
+    const tracklistByNumber: Record<number, ShowTracklist> = {
+      29: {
+        tim: [
+          { artist: "Ssaliva", title: "West End" },
+          { artist: "Vinyl Williams", title: "Open Your Mind" },
+          { artist: "Swell Maps", title: "Robot Factory" },
+          { artist: "Cocteau Twins", title: "Donimo" },
+          { artist: "Unknown", title: "Unknown" },
+          { artist: "Biosphere", title: "Hyperborea" },
+          { artist: "Bruce Haack", title: "Incantation (Jonti Remix)" },
+          { artist: "Electroluminescent", title: "Two Means Yes" },
+          { artist: "Ex-Easter Island Head", title: "Mallet Guitars Three (Second Movement)" },
+          { artist: "Hauschka", title: "Barfuss Durch Gras" },
+          { artist: "Ike Yard", title: "Nocturne" },
+          { artist: "Sobrenadar", title: "Ambar" },
+          { artist: "Laurel Halo", title: "Metal Confection" },
+          { artist: "TRG", title: "Broken Heart (Martyn remix)" },
+        ],
+        martyn: [
+          { artist: "Arthur Russell", title: "Picture Of Bunny Rabbit" },
+          { artist: "Kali Malone", title: "Music from Low Quartet" },
+          { artist: "Unknown", title: "Unknown" },
+          { artist: "Zaumne, YL Hooi", title: "Sorcières (feat. YL Hooi)" },
+          { artist: "The Residents", title: "Rest Aria" },
+          { artist: "Unknown", title: "Unknown" },
+          { artist: "Kinn", title: "When the Real Is No Longer There" },
+          { artist: "Stars of the Lid", title: "Tippy's Demise" },
+        ],
+      },
+    };
+
     const numbered = merged.map((s, i) => {
       const number = i + 1;
       const photo = s.photo ?? photoByNumber[number];
       const quote = s.quote ?? quoteByNumber[number];
-      return { ...s, number, ...(photo ? { photo } : {}), ...(quote ? { quote } : {}) };
+      const tracklist = s.tracklist ?? tracklistByNumber[number];
+      return { ...s, number, ...(photo ? { photo } : {}), ...(quote ? { quote } : {}), ...(tracklist ? { tracklist } : {}) };
     });
 
     return numbered.reverse();
