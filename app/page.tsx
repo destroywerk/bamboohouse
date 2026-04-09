@@ -305,13 +305,13 @@ function ShowPlayer({
                   <div className="border-t border-black border-opacity-10 pt-4">
                     {timFirst ? (
                       <>
-                        {show.tracklist?.tim !== undefined && <TracklistSection label="Tim" tracks={show.tracklist.tim} />}
-                        {show.tracklist?.martyn !== undefined && <TracklistSection label="Martyn" tracks={show.tracklist.martyn} />}
+                        {show.tracklist?.tim !== undefined && <TracklistSection key="tim" label="Tim" tracks={show.tracklist.tim} />}
+                        {show.tracklist?.martyn !== undefined && <TracklistSection key="martyn" label="Martyn" tracks={show.tracklist.martyn} />}
                       </>
                     ) : (
                       <>
-                        {show.tracklist?.martyn !== undefined && <TracklistSection label="Martyn" tracks={show.tracklist.martyn} />}
-                        {show.tracklist?.tim !== undefined && <TracklistSection label="Tim" tracks={show.tracklist.tim} />}
+                        {show.tracklist?.martyn !== undefined && <TracklistSection key="martyn" label="Martyn" tracks={show.tracklist.martyn} />}
+                        {show.tracklist?.tim !== undefined && <TracklistSection key="tim" label="Tim" tracks={show.tracklist.tim} />}
                       </>
                     )}
                   </div>
@@ -369,7 +369,7 @@ export default function Home() {
     const additionalShows: (Show & { mixcloudKey: string })[] = Object.entries(apiByMonth)
       .filter(([month]) => !hardcodedMonths.has(month))
       .map(([, r]) => ({
-        id: `api-${r.slug}`,
+        id: `api-${r.slug ?? r.key.replace(/\//g, "-")}`,
         number: 0,
         date: r._broadcastDate,
         displayDate: r._broadcastDate,
