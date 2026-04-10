@@ -81,16 +81,34 @@ function ShowCard({
       className="block w-full relative overflow-hidden"
       style={{
         height: 90,
-        background: isSelected ? "#E70000" : hovered ? "rgba(231,0,0,0.1)" : "#ffffff",
-        transition: "background-color 300ms ease",
+        background: hovered && !isSelected ? "rgba(231,0,0,0.1)" : "#ffffff",
+        transition: "background-color 200ms ease",
       }}
     >
+      {/* ── Red ripple circle ── */}
+      <div
+        className="absolute rounded-full pointer-events-none"
+        style={{
+          width: 1000,
+          height: 1000,
+          left: 55,
+          top: "50%",
+          transform: `translate(-50%, -50%) scale(${isSelected ? 1 : 0})`,
+          background: "#E70000",
+          transition: isSelected
+            ? "transform 420ms cubic-bezier(0.4, 0, 0.2, 1)"
+            : "transform 380ms cubic-bezier(0.4, 0, 0.2, 1)",
+          zIndex: 0,
+        }}
+      />
+
       {/* ── Collapsed content layer ── */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           opacity: isSelected ? 0 : 1,
-          transition: isSelected ? "opacity 180ms ease" : "opacity 250ms ease 60ms",
+          transition: isSelected ? "opacity 150ms ease" : "opacity 200ms ease 280ms",
+          zIndex: 1,
         }}
       >
         <span
@@ -164,7 +182,8 @@ function ShowCard({
         className="absolute inset-0 flex items-center justify-between px-5 pointer-events-none"
         style={{
           opacity: isSelected ? 1 : 0,
-          transition: isSelected ? "opacity 220ms ease 80ms" : "opacity 150ms ease",
+          transition: isSelected ? "opacity 200ms ease 320ms" : "opacity 120ms ease",
+          zIndex: 1,
         }}
       >
         <span
