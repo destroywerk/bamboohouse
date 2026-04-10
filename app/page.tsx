@@ -141,6 +141,16 @@ function ShowCard({
           </span>
         )}
 
+        {/* T indicator — mobile only */}
+        {hasTracklist && (
+          <span
+            className="sm:hidden absolute text-[13px] text-[#999]"
+            style={{ right: show.photo ? 112 : 12, top: 22 }}
+          >
+            T
+          </span>
+        )}
+
         {show.photo && (
           <div className="absolute right-0 top-0 h-full overflow-hidden" style={{ width: 100 }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
