@@ -62,6 +62,7 @@ export const shows: Show[] = [
     date: "2025-05-11",
     displayDate: "11.05.25",
     mixcloudKey: "/MusicBoxRadioUK/bamboo-house-sunday-11th-may-2025/",
+    quote: "That so many of us live most of our lives seeking the answerable, and somehow demeaning or bypassing those things that can't be answered and therefore denuding one's life of the acceptance and pleasure of mystery and the willingness to live with mystery.",
     tracklist: {
       tim: [
         { artist: "Sarah Davachi, Sean McCann", title: "Return to the Waterfall" },
