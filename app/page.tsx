@@ -145,7 +145,7 @@ function ShowCard({
         {hasTracklist && (
           <span
             className="sm:hidden absolute text-[13px] text-[#999]"
-            style={{ right: show.photo ? 112 : 12, top: 22 }}
+            style={{ right: show.photo ? 112 : 12, top: 14 }}
           >
             T
           </span>
