@@ -57,6 +57,33 @@ export const shows: Show[] = [
     },
   },
   {
+    id: "bh52",
+    number: 52,
+    date: "2025-07-13",
+    displayDate: "13.07.25",
+    mixcloudKey: "/MusicBoxRadioUK/bamboo-house-sunday-13th-july-2025/",
+    tracklist: {
+      tim: [
+        { artist: "Abul Mogard", title: "Sand" },
+        { artist: "Félicia Atkinson", title: "Moderato Cantabile" },
+        { artist: "Not Waving, Romance", title: "Tropic Of Desire" },
+        { artist: "Frank Hatchett", title: "Malibu Nites" },
+        { artist: "Chris Hyson", title: "Titan (Magic Island)" },
+        { artist: "Sign Libra", title: "There Must Be An Angel (Playing With My Heart)" },
+        { artist: "Jonny Nash", title: "Angel" },
+        { artist: "Disiniblud, Rachika Nayar, Nina Keith, Julianna Barwick", title: "Give-upping" },
+        { artist: "Nate Mercereau, Josh Johnson, Carlos Niño", title: "Hawk Dreams" },
+        { artist: "Lord of the Isles", title: "Storm Mother" },
+        { artist: "Underworld", title: "To Heal" },
+        { artist: "Qasim Naqvi", title: "Kindly Static" },
+        { artist: "Anenon", title: "Sightless Eyes (N16)" },
+      ],
+      martyn: [
+        { artist: "Martyn Riley", title: "Field Recordings" },
+      ],
+    },
+  },
+  {
     id: "bh53",
     number: 53,
     date: "2025-08-10",
