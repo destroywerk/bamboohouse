@@ -509,6 +509,16 @@ export default function Home() {
       setSelectedId(null);
       return;
     }
+    // Scroll the card to just below the site header before expanding,
+    // so the panel always opens downward from a known position
+    const cardEl = document.querySelector(`[data-show-id="${id}"]`);
+    if (cardEl) {
+      const rect = cardEl.getBoundingClientRect();
+      const siteHeaderHeight = 52;
+      if (rect.top < siteHeaderHeight) {
+        window.scrollBy({ top: rect.top - siteHeaderHeight - 8, behavior: "instant" });
+      }
+    }
     if (!openedIds.has(id)) {
       flushSync(() => setOpenedIds((prev) => new Set([...prev, id])));
     }
@@ -644,10 +654,11 @@ export default function Home() {
           )}
 
           {/* Show list — 8px gap between cards, each is its own bordered box */}
-          <div className="space-y-2">
+          <div className="space-y-2" style={{ overflowAnchor: "none" }}>
             {filteredShows.map((show) => (
               <div
                 key={show.id}
+                data-show-id={show.id}
                 ref={selectedId === show.id ? selectedRef : undefined}
                 className="border border-black"
               >
