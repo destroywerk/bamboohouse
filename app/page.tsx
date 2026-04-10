@@ -89,8 +89,8 @@ function ShowCard({
       <div
         className="absolute rounded-full pointer-events-none"
         style={{
-          width: 1000,
-          height: 1000,
+          width: 4000,
+          height: 4000,
           left: 55,
           top: "50%",
           transform: `translate(-50%, -50%) scale(${isSelected ? 1 : 0})`,
