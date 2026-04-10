@@ -520,7 +520,9 @@ export default function Home() {
       }
     }
     if (!openedIds.has(id)) {
+      const scrollY = window.scrollY;
       flushSync(() => setOpenedIds((prev) => new Set([...prev, id])));
+      window.scrollTo({ top: scrollY, behavior: "instant" });
     }
     setSelectedId(id);
   };
