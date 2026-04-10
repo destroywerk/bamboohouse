@@ -59,9 +59,9 @@ export const shows: Show[] = [
   {
     id: "bh48",
     number: 48,
-    date: "2025-03-09",
-    displayDate: "09.03.25",
-    mixcloudKey: "/MusicBoxRadioUK/bamboo-house-sunday-9th-march-2025/",
+    date: "2025-02-09",
+    displayDate: "09.02.25",
+    mixcloudKey: "/MusicBoxRadioUK/bamboo-house-sunday-9th-february-2025/",
     tracklist: {
       tim: [
         { artist: "Joanna Brouk", title: "Maggi's Flute - Mary's Watch, Pt. 1" },
