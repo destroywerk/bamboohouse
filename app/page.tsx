@@ -504,21 +504,23 @@ export default function Home() {
 
   const handleSelect = (id: string) => {
     hasAutoOpened.current = true;
+    // Remove focus from the button so the browser doesn't auto-scroll
+    // to keep the focused element in view as the panel expands
+    (document.activeElement as HTMLElement)?.blur();
     if (selectedId === id) {
       setSelectedId(null);
       return;
     }
-    // If content hasn't been rendered yet, mount it first (at grid-rows: 0fr),
-    // then in the next paint expand — this prevents layout-reflow stutter
     if (!openedIds.has(id)) {
       flushSync(() => setOpenedIds((prev) => new Set([...prev, id])));
     }
     setSelectedId(id);
+    // After expansion settles, scroll only if the card header is below the fold
     setTimeout(() => {
       if (!selectedRef.current) return;
-      const top = selectedRef.current.getBoundingClientRect().top;
-      if (top < 0) {
-        window.scrollBy({ top: top - 8, behavior: "smooth" });
+      const rect = selectedRef.current.getBoundingClientRect();
+      if (rect.top > window.innerHeight - 100) {
+        selectedRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     }, 460);
   };
