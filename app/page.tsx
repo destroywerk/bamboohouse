@@ -654,7 +654,7 @@ export default function Home() {
           )}
 
           {/* Show list — 8px gap between cards, each is its own bordered box */}
-          <div className="space-y-2" style={{ overflowAnchor: "none" }}>
+          <div className="space-y-2">
             {filteredShows.map((show) => (
               <div
                 key={show.id}
