@@ -102,6 +102,7 @@ export const shows: Show[] = [
     displayDate: "08.02.26",
     mixcloudKey: "/MusicBoxRadioUK/bamboo-house-sunday-8th-february-2026/",
     timFirst: false,
+    quote: "When a loved one dies, you experience your life in just two days - today, when they are no longer here, and yesterday, the immense, vast yesterday when they were here.",
     tracklist: {
       martyn: [
         { artist: "Carrier", title: "A Point Most Crucial" },
