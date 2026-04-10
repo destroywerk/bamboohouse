@@ -63,6 +63,7 @@ export const shows: Show[] = [
     displayDate: "11.01.26",
     mixcloudKey: "/MusicBoxRadioUK/bamboo-house-sunday-11th-january-2026/",
     timFirst: true,
+    quote: "Even before materializing or becoming a signal, the sonorous—sound—in order to be, must leave a trace. Like a parasite, in order to exist it first of all needs a host. This necessary support is not so much the air, or any other medium that is informed by sound and testifies to it through the trail it leaves behind as it propagates. The trace is not necessarily a material, physical host; it precedes the pertinence of any such distinction.",
     tracklist: {
       martyn: [
         { artist: "Martyn Riley", title: "[Sound fragments from Estonia]" },
