@@ -64,6 +64,17 @@ export const shows: Show[] = [
     mixcloudKey: "/MusicBoxRadioUK/bamboo-house-sunday-11th-january-2026/",
     timFirst: true,
     tracklist: {
+      martyn: [
+        { artist: "Martyn Riley", title: "[Sound fragments from Estonia]" },
+        { artist: "Sandeep Brar", title: "Chaar Din" },
+        { artist: "The Humble Bee, Offthesky", title: "And She Floats In The Air" },
+        { artist: "Unknown", title: "Unknown" },
+        { artist: "Arvo Pärt", title: "Festina Lente" },
+        { artist: "The Blue Nile", title: "Over the Hillside" },
+        { artist: "Gareth Davis, Scanner", title: "Structure of statements" },
+        { artist: "Carrier", title: "Offshore (feat. Memotone)" },
+        { artist: "Miradasvacas", title: "VIII" },
+      ],
       tim: [
         { artist: "Alicks", title: "req_under" },
         { artist: "Mark Hollis", title: "Inside Looking Out" },
