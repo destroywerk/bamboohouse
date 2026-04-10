@@ -57,6 +57,32 @@ export const shows: Show[] = [
     },
   },
   {
+    id: "bh55",
+    number: 55,
+    date: "2025-10-12",
+    displayDate: "12.10.25",
+    mixcloudKey: "/MusicBoxRadioUK/bamboo-house-sunday-12th-october-2025/",
+    tracklist: {
+      martyn: [
+        { artist: "Flask Collective", title: "ADSR live recordings" },
+      ],
+      tim: [
+        { artist: "Jim Wallis, Henry Senior Jr", title: "Set My Watch To You" },
+        { artist: "Ruth Mascelli", title: "Psychic Surgery" },
+        { artist: "Ólafur Arnalds & Nils Frahm", title: "23:52" },
+        { artist: "John Also Bennett", title: "A Handful of Olives" },
+        { artist: "Joachim Spieth, Zake, Markus Guentner", title: "Serenity" },
+        { artist: "Etelin", title: "Picnic at Gas Station Park" },
+        { artist: "Zake", title: "Caelum, No. II" },
+        { artist: "Radio Costes", title: "Do Dekor" },
+        { artist: "Dauwd", title: "Murmure" },
+        { artist: "Francis Harris", title: "Beaumont" },
+        { artist: "David Allred", title: "Unconditional Love" },
+        { artist: "Beautiful Chorus", title: "Faith's Hymn" },
+      ],
+    },
+  },
+  {
     id: "bh56",
     number: 56,
     date: "2025-11-09",
