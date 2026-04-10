@@ -205,6 +205,7 @@ export const shows: Show[] = [
     date: "2025-07-13",
     displayDate: "13.07.25",
     mixcloudKey: "/MusicBoxRadioUK/bamboo-house-sunday-13th-july-2025/",
+    quote: "Looking for something which is stable in our existence and discovering at the end of this book that only one stable place that we have is our human body. It's our container which we are enclosed and in which we're travelling all around the world.",
     tracklist: {
       tim: [
         { artist: "Abul Mogard", title: "Sand" },
