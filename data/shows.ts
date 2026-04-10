@@ -92,7 +92,14 @@ export const shows: Show[] = [
     mixcloudKey: "/MusicBoxRadioUK/bamboo-house-sunday-8th-february-2026/",
     timFirst: false,
     tracklist: {
-      martyn: UNAVAILABLE,
+      martyn: [
+        { artist: "Carrier", title: "A Point Most Crucial" },
+        { artist: "Oliver Barrett", title: "The Endless Void" },
+        { artist: "Lusid", title: "Alchemy Lab" },
+        { artist: "Oliver Barrett", title: "Screaming Drift" },
+        { artist: "Unknown", title: "Unknown" },
+        { artist: "Anna Johnson", title: "January" },
+      ],
       tim: [
         { artist: "Aska Matsumiya", title: "A Song for All Seasons" },
         { artist: "Loscil", title: "Argonaut I" },
