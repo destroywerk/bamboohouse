@@ -472,6 +472,17 @@ export default function Home() {
     [allShows, selectedYear]
   );
 
+  // Counting animation for episode number — placed after allShows is defined
+  const [displayCount, setDisplayCount] = useState(1);
+  const countTarget = loadingRecent ? shows.length : allShows.length;
+  useEffect(() => {
+    if (displayCount >= countTarget) return;
+    const step = Math.max(1, Math.floor((countTarget - displayCount) / 8));
+    const delay = displayCount < 60 ? 18 : 40;
+    const t = setTimeout(() => setDisplayCount((n) => Math.min(n + step, countTarget)), delay);
+    return () => clearTimeout(t);
+  }, [displayCount, countTarget]);
+
   const handleSelect = (id: string) => {
     hasAutoOpened.current = true;
     if (selectedId === id) {
@@ -555,7 +566,7 @@ export default function Home() {
               <div className="px-4 pt-3 pb-2">
                 <div className="text-[11px] uppercase tracking-widest text-[#999] mb-1">Episodes</div>
                 <div className="font-black leading-none" style={{ fontSize: 64, letterSpacing: "-0.05em" }}>
-                  {loadingRecent ? shows.length : allShows.length}
+                  {displayCount}
                 </div>
               </div>
               <div className="border-t border-dashed border-black border-opacity-20 px-4 py-3">
