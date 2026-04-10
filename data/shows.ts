@@ -315,6 +315,7 @@ export const shows: Show[] = [
     date: "2025-11-09",
     displayDate: "09.11.25",
     mixcloudKey: "/MusicBoxRadioUK/bamboo-house-sunday-9th-november-2025/",
+    quote: "Because all you want out of childrearing is an autonomous human being respectful of themselves and of others, who can be authentic and connected at the same time. That's our goal. That's a natural developmental process as long as we provide the right conditions for it, but nothing in nature develops in the wrong context.",
     tracklist: {
       tim: [
         { artist: "Dettinger", title: "Oasis 7" },
