@@ -93,7 +93,6 @@ export const shows: Show[] = [
         { artist: "Bremer/McCoy", title: "Aurora" },
         { artist: "Max Cooper", title: "Let There Be" },
       ],
-      martyn: UNAVAILABLE,
     },
   },
   {
