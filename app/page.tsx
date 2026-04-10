@@ -515,8 +515,12 @@ export default function Home() {
     }
     setSelectedId(id);
     setTimeout(() => {
-      selectedRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-    }, 50);
+      if (!selectedRef.current) return;
+      const top = selectedRef.current.getBoundingClientRect().top;
+      if (top < 0) {
+        window.scrollBy({ top: top - 8, behavior: "smooth" });
+      }
+    }, 460);
   };
 
   return (
