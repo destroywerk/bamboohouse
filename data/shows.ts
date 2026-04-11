@@ -533,6 +533,7 @@ export const shows: Show[] = [
     date: "2023-07-09",
     displayDate: "09.07.23",
     mixcloudKey: "/MusicBoxRadioUK/bamboo-house-sunday-9th-july-2023/",
+    quote: "Now the problem with ever telling anyone anything about yourself, is that any single facet of a life articulated in isolation is lent an undue weight and prominence in someone else's understanding about that person... I don't think we're best place to articulate anything about ourselves because we're stuck in the middle of ourselves.",
     tracklist: {
       tim: [
         { artist: "Ssaliva", title: "West End" },
