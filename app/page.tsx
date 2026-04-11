@@ -507,19 +507,22 @@ export default function Home() {
     hasAutoOpened.current = true;
     (document.activeElement as HTMLElement)?.blur();
 
-    // Record where the clicked card is NOW before any state change
     const cardEl = document.querySelector(`[data-show-id="${id}"]`) as HTMLElement | null;
-    const cardTopBefore = cardEl?.getBoundingClientRect().top ?? 0;
+    const targetTop = cardEl?.getBoundingClientRect().top ?? 0;
+    const startTime = performance.now();
+    const DURATION = 460; // matches grid transition duration
 
     setSelectedId((prev) => (prev === id ? null : id));
 
-    // After React renders + browser layout (including any scroll anchoring),
-    // snap the page back so the clicked card is exactly where it was
-    requestAnimationFrame(() => {
-      if (!cardEl) return;
-      const delta = cardEl.getBoundingClientRect().top - cardTopBefore;
-      if (Math.abs(delta) > 0.5) window.scrollBy(0, delta);
-    });
+    // Pin the clicked card at its current viewport position for the full
+    // duration of the close/open transition, correcting any scroll drift each frame
+    const pinFrame = () => {
+      if (!cardEl || performance.now() - startTime > DURATION) return;
+      const drift = cardEl.getBoundingClientRect().top - targetTop;
+      if (Math.abs(drift) > 0.5) window.scrollBy(0, drift);
+      requestAnimationFrame(pinFrame);
+    };
+    requestAnimationFrame(pinFrame);
   };
 
   return (
