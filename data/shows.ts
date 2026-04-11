@@ -672,7 +672,7 @@ export const shows: Show[] = [
     date: "2023-08-13",
     displayDate: "13.08.23",
     mixcloudKey: "/MusicBoxRadioUK/bamboo-house-sunday-13th-august-2023/",
-    quote: "We're used to seeing thigns from a particular point of view, that is from a different frame of reference. Things will always look different for us from a different set of circumstances.",
+    quote: "I wonder, if I'd had the chance to save something, just a few things, what would they have been...",
     tracklist: {
       martyn: [
         { artist: "Laurel Halo", title: "Hyphae" },
