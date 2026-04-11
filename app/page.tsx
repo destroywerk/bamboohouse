@@ -554,7 +554,7 @@ export default function Home() {
             <div className="flex items-start justify-between lg:block mb-5">
               <LogoMark size={44} />
               <div className="flex flex-col items-end gap-2 lg:hidden">
-                <a href="https://www.mixcloud.com/MusicBoxRadioUK/" target="_blank" rel="noopener noreferrer"
+                <a href="https://www.musicboxradio.co.uk/#/" target="_blank" rel="noopener noreferrer"
                   className="text-[11px] uppercase tracking-widest text-black hover:text-[#E70000] transition-colors">
                   MusicBoxRadioUK ↗
                 </a>
@@ -604,7 +604,7 @@ export default function Home() {
 
             {/* Links */}
             <div className="hidden lg:flex flex-col gap-2">
-              <a href="https://www.mixcloud.com/MusicBoxRadioUK/" target="_blank" rel="noopener noreferrer"
+              <a href="https://www.musicboxradio.co.uk/#/" target="_blank" rel="noopener noreferrer"
                 className="text-[13px] uppercase tracking-widest text-black hover:text-[#E70000] transition-colors">
                 MusicBoxRadioUK ↗
               </a>
