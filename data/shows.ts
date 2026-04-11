@@ -563,6 +563,32 @@ export const shows: Show[] = [
     },
   },
   {
+    id: "bh33",
+    number: 33,
+    date: "2023-11-12",
+    displayDate: "12.11.23",
+    mixcloudKey: "/MusicBoxRadioUK/bamboo-house-sunday-12th-november-2023/",
+    quote: "I miss the cold but not the cold breaking. Not the small winds nor the icepick cold white wind working it's way through you, no matter your coat and gloves... The same cold blue all day in the sky frozen blue through the limbs of the standing elms.",
+    tracklist: {
+      martyn: [
+        { artist: "Growing", title: "Primitive Associations / Great Mass Above" },
+        { artist: "Patti Smith, Kevin Shields", title: "The Coral Sea: Performance I, Part Three" },
+        { artist: "John Martyn", title: "Small Hours" },
+        { artist: "Arve Henriksen", title: "Blue Silk" },
+        { artist: "Slowdive", title: "Rutti" },
+        { artist: "Genesis", title: "Ravine" },
+        { artist: "Jóhann Jóhannsson", title: "Fordlândia" },
+        { artist: "Aphex Twin", title: "#3" },
+      ],
+      tim: [
+        { artist: "Ben Lukas Boysen", title: "Only in the Dark" },
+        { artist: "Cole Pulice", title: "If I Don't See You in the Future, I'll See You in the Pasture" },
+        { artist: "Taylor Deupree", title: "Mir" },
+        { artist: "Jordan De La Sierra", title: "Temple of Aesthetic Action" },
+      ],
+    },
+  },
+  {
     id: "bh32",
     number: 32,
     date: "2023-10-08",
