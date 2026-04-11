@@ -429,9 +429,7 @@ export default function Home() {
       59: "/photos/bh59.png", 60: "/photos/bh60.png",
     };
 
-    const quoteByNumber: Record<number, string> = {
-      38: "Everyone knows that all life requires energy. But we rarely consider how dependent art and culture are on the energy that is needed to produce, practice and sustain them. What we fail to see are the usually invisible sources of energy that make our art and culture(s) possible and bring with them fundamental values that we are all constrained to live with (whether we approve of them or not).",
-    };
+    const quoteByNumber: Record<number, string> = {};
 
     const tracklistByNumber: Record<number, ShowTracklist> = {
       29: {
