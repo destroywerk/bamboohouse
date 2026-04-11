@@ -59,9 +59,9 @@ export const shows: Show[] = [
   {
     id: "bh42",
     number: 42,
-    date: "2024-07-14",
-    displayDate: "14.07.24",
-    mixcloudKey: "/MusicBoxRadioUK/bamboo-house-sunday-14th-july-2024/",
+    date: "2024-08-11",
+    displayDate: "11.08.24",
+    mixcloudKey: "/MusicBoxRadioUK/bamboo-house-sunday-11th-august-2024/",
     tracklist: {
       tim: [
         { artist: "Nico Georis", title: "Gone" },
