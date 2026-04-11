@@ -57,6 +57,32 @@ export const shows: Show[] = [
     },
   },
   {
+    id: "bh37",
+    number: 37,
+    date: "2024-03-24",
+    displayDate: "24.03.24",
+    mixcloudKey: "/MusicBoxRadioUK/bamboo-house-sunday-24th-march-2024/",
+    tracklist: {
+      martyn: [
+        { artist: "Martyn Riley", title: "Field Recordings" },
+      ],
+      tim: [
+        { artist: "Joseph Shabason, Ben Gunning", title: "Measures of Fog" },
+        { artist: "LI YILEI", title: "The Noir, Rêvasser, Retrouvailles" },
+        { artist: "Ernest Hood", title: "Saturday Morning Doze" },
+        { artist: "Houston & Dorsey", title: "Ebb Tide" },
+        { artist: "Tomaga", title: "A Call from the Eaves (feat. Marta Salogni & Floating Points)" },
+        { artist: "Eli Keszler", title: "The Vaulting Sky" },
+        { artist: "Haruhisa Tanaka", title: "Floating" },
+        { artist: "The Vernon Spring", title: "Outswum" },
+        { artist: "Tenka, Meitei", title: "Nutrition ~ Microorganisms In The Darkness Of Life" },
+        { artist: "David Edren, H.Takahashi", title: "Light Blue & Plink" },
+        { artist: "Günter Schlienz", title: "Games at the Creek" },
+        { artist: "Hilde Marie Holsen, Lynn Cassiers", title: "Opening" },
+      ],
+    },
+  },
+  {
     id: "bh38",
     number: 38,
     date: "2024-04-14",
