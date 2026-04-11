@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
-import { flushSync } from "react-dom";
 import { shows, getMixcloudEmbedUrl, type Show, type ShowTracklist } from "@/data/shows";
 
 type MixcloudShow = {
@@ -509,22 +508,14 @@ export default function Home() {
       setSelectedId(null);
       return;
     }
-    // Scroll the card to just below the site header before expanding,
-    // so the panel always opens downward from a known position
-    const cardEl = document.querySelector(`[data-show-id="${id}"]`);
-    if (cardEl) {
-      const rect = cardEl.getBoundingClientRect();
-      const siteHeaderHeight = 52;
-      if (rect.top < siteHeaderHeight) {
-        window.scrollBy({ top: rect.top - siteHeaderHeight - 8, behavior: "instant" });
-      }
-    }
-    if (!openedIds.has(id)) {
-      const scrollY = window.scrollY;
-      flushSync(() => setOpenedIds((prev) => new Set([...prev, id])));
-      window.scrollTo({ top: scrollY, behavior: "instant" });
-    }
-    setSelectedId(id);
+    // Stage 1: mount ShowPlayer content at 0fr height (no scroll disruption)
+    // Stage 2: after browser has painted stage 1, expand to 1fr
+    setOpenedIds((prev) => new Set([...prev, id]));
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setSelectedId(id);
+      });
+    });
   };
 
   return (
