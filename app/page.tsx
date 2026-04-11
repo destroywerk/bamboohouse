@@ -246,9 +246,6 @@ function ShowPlayer({
 }) {
   const [tracklistOpen, setTracklistOpen] = useState(false);
   const [ready, setReady] = useState(false);
-  // Track whether this player has ever been selected so we keep content mounted
-  const hasBeenSelected = useRef(false);
-  if (isSelected) hasBeenSelected.current = true;
 
   const embedUrl = getMixcloudEmbedUrl(show.mixcloudKey);
   const hasAnyTracklist =
@@ -256,11 +253,12 @@ function ShowPlayer({
     ((Array.isArray(show.tracklist.tim) && show.tracklist.tim.length > 0) ||
       (Array.isArray(show.tracklist.martyn) && show.tracklist.martyn.length > 0));
 
-  // Delay rendering content until card animation has settled, then fade in together
+  // Fade in after card animation settles; reset opacity when collapsed
   useEffect(() => {
+    if (!isSelected) { setReady(false); return; }
     const t = setTimeout(() => setReady(true), 200);
     return () => clearTimeout(t);
-  }, []);
+  }, [isSelected]);
 
   useEffect(() => {
     if (autoOpenTracklist && hasAnyTracklist) setTracklistOpen(true);
@@ -278,7 +276,6 @@ function ShowPlayer({
       className="bg-white px-5 pt-5 pb-6"
       style={{ opacity: ready ? 1 : 0, transition: "opacity 500ms ease" }}
     >
-      {!hasBeenSelected.current ? null : (<>
       {show.quote && (
         <p className="text-[14px] font-light text-[#666] leading-[20px] mb-5">
           &ldquo;{show.quote}&rdquo;
@@ -300,6 +297,7 @@ function ShowPlayer({
             height="120"
             frameBorder={0}
             scrolling="no"
+            loading="lazy"
             allow="encrypted-media; fullscreen; autoplay; idle-detection; speaker-selection; web-share"
             className="block"
             title={`Bamboo House BH${String(show.number).padStart(2, "0")} — ${formatDisplayDate(show.date)}`}
@@ -358,7 +356,6 @@ function ShowPlayer({
           )}
         </div>
       </div>
-      </>)}
     </div>
   );
 }
