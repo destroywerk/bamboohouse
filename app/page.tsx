@@ -509,7 +509,20 @@ export default function Home() {
   const handleSelect = (id: string) => {
     hasAutoOpened.current = true;
     (document.activeElement as HTMLElement)?.blur();
+
+    // Record where the clicked card is NOW before any state change
+    const cardEl = document.querySelector(`[data-show-id="${id}"]`) as HTMLElement | null;
+    const cardTopBefore = cardEl?.getBoundingClientRect().top ?? 0;
+
     setSelectedId((prev) => (prev === id ? null : id));
+
+    // After React renders + browser layout (including any scroll anchoring),
+    // snap the page back so the clicked card is exactly where it was
+    requestAnimationFrame(() => {
+      if (!cardEl) return;
+      const delta = cardEl.getBoundingClientRect().top - cardTopBefore;
+      if (Math.abs(delta) > 0.5) window.scrollBy(0, delta);
+    });
   };
 
   return (
