@@ -237,13 +237,19 @@ function TracklistSection({
 // ─── Show player ──────────────────────────────────────────────────────────────
 function ShowPlayer({
   show,
+  isSelected,
   autoOpenTracklist,
 }: {
   show: Show & { mixcloudKey: string };
+  isSelected: boolean;
   autoOpenTracklist?: boolean;
 }) {
   const [tracklistOpen, setTracklistOpen] = useState(false);
   const [ready, setReady] = useState(false);
+  // Track whether this player has ever been selected so we keep content mounted
+  const hasBeenSelected = useRef(false);
+  if (isSelected) hasBeenSelected.current = true;
+
   const embedUrl = getMixcloudEmbedUrl(show.mixcloudKey);
   const hasAnyTracklist =
     show.tracklist !== undefined &&
@@ -272,6 +278,7 @@ function ShowPlayer({
       className="bg-white px-5 pt-5 pb-6"
       style={{ opacity: ready ? 1 : 0, transition: "opacity 500ms ease" }}
     >
+      {!hasBeenSelected.current ? null : (<>
       {show.quote && (
         <p className="text-[14px] font-light text-[#666] leading-[20px] mb-5">
           &ldquo;{show.quote}&rdquo;
@@ -351,6 +358,7 @@ function ShowPlayer({
           )}
         </div>
       </div>
+      </>)}
     </div>
   );
 }
@@ -362,7 +370,6 @@ export default function Home() {
   const [recentShows, setRecentShows] = useState<MixcloudShow[]>([]);
   const [loadingRecent, setLoadingRecent] = useState(true);
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
-  const [openedIds, setOpenedIds] = useState<Set<string>>(new Set());
   const selectedRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -474,9 +481,7 @@ export default function Home() {
   useEffect(() => {
     if (!loadingRecent && !hasAutoOpened.current && allShows.length > 0) {
       hasAutoOpened.current = true;
-      const firstId = allShows[0].id;
-      setOpenedIds(new Set([firstId]));
-      setSelectedId(firstId);
+      setSelectedId(allShows[0].id);
     }
   }, [loadingRecent, allShows]);
 
@@ -504,18 +509,7 @@ export default function Home() {
   const handleSelect = (id: string) => {
     hasAutoOpened.current = true;
     (document.activeElement as HTMLElement)?.blur();
-    if (selectedId === id) {
-      setSelectedId(null);
-      return;
-    }
-    // Stage 1: mount ShowPlayer content at 0fr height (no scroll disruption)
-    // Stage 2: after browser has painted stage 1, expand to 1fr
-    setOpenedIds((prev) => new Set([...prev, id]));
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        setSelectedId(id);
-      });
-    });
+    setSelectedId((prev) => (prev === id ? null : id));
   };
 
   return (
@@ -660,7 +654,7 @@ export default function Home() {
                   isSelected={selectedId === show.id}
                   onClick={() => handleSelect(show.id)}
                 />
-                {/* Animated panel — height transitions via grid, content stays mounted once opened */}
+                {/* Animated panel — always in DOM, height controlled by grid */}
                 <div
                   style={{
                     display: "grid",
@@ -669,14 +663,13 @@ export default function Home() {
                   }}
                 >
                   <div style={{ overflow: "hidden" }}>
-                    {openedIds.has(show.id) && (
-                      <div className="border-t border-black">
-                        <ShowPlayer
-                          show={show}
-                          autoOpenTracklist={show.id === allShows[0]?.id}
-                        />
-                      </div>
-                    )}
+                    <div className="border-t border-black">
+                      <ShowPlayer
+                        show={show}
+                        isSelected={selectedId === show.id}
+                        autoOpenTracklist={show.id === allShows[0]?.id}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
