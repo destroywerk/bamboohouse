@@ -202,13 +202,30 @@ function ShowCard({
   );
 }
 
+// ─── Highlight matching text ──────────────────────────────────────────────────
+function Highlight({ text, query }: { text: string; query: string }) {
+  if (!query) return <>{text}</>;
+  const parts = text.split(new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi"));
+  return (
+    <>
+      {parts.map((part, i) =>
+        part.toLowerCase() === query.toLowerCase() ? (
+          <mark key={i} className="bg-[#E70000] text-white rounded-none px-0">{part}</mark>
+        ) : part
+      )}
+    </>
+  );
+}
+
 // ─── Tracklist section ────────────────────────────────────────────────────────
 function TracklistSection({
   label,
   tracks,
+  highlightQuery,
 }: {
   label: string;
   tracks: { artist: string; title: string }[] | null | undefined;
+  highlightQuery?: string;
 }) {
   if (tracks === undefined) return null;
   return (
@@ -222,9 +239,9 @@ function TracklistSection({
             <li key={i} className="flex gap-3 text-[13px] leading-relaxed">
               <span className="text-[#999] shrink-0 w-5 text-right tabular-nums">{i + 1}</span>
               <span className="font-light text-[#666]">
-                <span className="text-black font-normal">{track.artist}</span>
+                <span className="text-black font-normal"><Highlight text={track.artist} query={highlightQuery ?? ""} /></span>
                 {" — "}
-                {track.title}
+                <Highlight text={track.title} query={highlightQuery ?? ""} />
               </span>
             </li>
           ))}
@@ -239,10 +256,12 @@ function ShowPlayer({
   show,
   isSelected,
   autoOpenTracklist,
+  highlightQuery,
 }: {
   show: Show & { mixcloudKey: string };
   isSelected: boolean;
   autoOpenTracklist?: boolean;
+  highlightQuery?: string;
 }) {
   const [tracklistOpen, setTracklistOpen] = useState(false);
   const [ready, setReady] = useState(false);
@@ -338,13 +357,13 @@ function ShowPlayer({
                   <div className="border-t border-black border-opacity-10 pt-4">
                     {timFirst ? (
                       <>
-                        {show.tracklist?.tim !== undefined && <TracklistSection key="tim" label="Tim" tracks={show.tracklist.tim} />}
-                        {show.tracklist?.martyn !== undefined && <TracklistSection key="martyn" label="Martyn" tracks={show.tracklist.martyn} />}
+                        {show.tracklist?.tim !== undefined && <TracklistSection key="tim" label="Tim" tracks={show.tracklist.tim} highlightQuery={highlightQuery} />}
+                        {show.tracklist?.martyn !== undefined && <TracklistSection key="martyn" label="Martyn" tracks={show.tracklist.martyn} highlightQuery={highlightQuery} />}
                       </>
                     ) : (
                       <>
-                        {show.tracklist?.martyn !== undefined && <TracklistSection key="martyn" label="Martyn" tracks={show.tracklist.martyn} />}
-                        {show.tracklist?.tim !== undefined && <TracklistSection key="tim" label="Tim" tracks={show.tracklist.tim} />}
+                        {show.tracklist?.martyn !== undefined && <TracklistSection key="martyn" label="Martyn" tracks={show.tracklist.martyn} highlightQuery={highlightQuery} />}
+                        {show.tracklist?.tim !== undefined && <TracklistSection key="tim" label="Tim" tracks={show.tracklist.tim} highlightQuery={highlightQuery} />}
                       </>
                     )}
                   </div>
@@ -368,6 +387,41 @@ export default function Home() {
   const [loadingRecent, setLoadingRecent] = useState(true);
   const [selectedYear, setSelectedYear] = useState<number | null>(null);
   const selectedRef = useRef<HTMLDivElement>(null);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [listVisible, setListVisible] = useState(true);
+  const [listTransition, setListTransition] = useState("opacity 600ms cubic-bezier(0.65, 0, 0.35, 1)");
+
+  const transitionQuery = (q: string) => {
+    if (q) {
+      // Searching: fade out → swap → fade in
+      setListTransition("opacity 600ms cubic-bezier(0.65, 0, 0.35, 1)");
+      setListVisible(false);
+      setTimeout(() => {
+        setSearchQuery(q);
+        setListVisible(true);
+      }, 600);
+    } else {
+      // Clearing: instant swap at opacity 0, then fade in — no blank gap
+      setListTransition("none");
+      setListVisible(false);
+      setSearchQuery("");
+      setTimeout(() => {
+        setListTransition("opacity 500ms cubic-bezier(0.22, 1, 0.36, 1)");
+        setListVisible(true);
+      }, 16);
+    }
+  };
+  const searchInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (searchOpen) {
+      // small delay so the fade-in has started before focus steals rendering
+      const t = setTimeout(() => searchInputRef.current?.focus(), 50);
+      return () => clearTimeout(t);
+    }
+  }, [searchOpen]);
 
   useEffect(() => {
     fetch("/api/recent-shows")
@@ -489,6 +543,26 @@ export default function Home() {
     () => selectedYear ? allShows.filter((s) => getYear(s.date) === selectedYear) : allShows,
     [allShows, selectedYear]
   );
+
+  const searchResults = useMemo(() => {
+    if (!searchQuery) return null;
+    const q = searchQuery.toLowerCase();
+    return allShows.filter((s) => {
+      const tracks = [...(s.tracklist?.tim ?? []), ...(s.tracklist?.martyn ?? [])];
+      return tracks.some(
+        (t) => t && (t.artist.toLowerCase().includes(q) || t.title.toLowerCase().includes(q))
+      );
+    });
+  }, [searchQuery, allShows]);
+
+  const displayedShows = searchResults ?? filteredShows;
+
+  // Auto-expand first search result
+  useEffect(() => {
+    if (searchResults && searchResults.length > 0) {
+      setSelectedId(searchResults[0].id);
+    }
+  }, [searchResults]);
 
   // Counting animation for episode number — placed after allShows is defined
   const [displayCount, setDisplayCount] = useState(1);
@@ -622,28 +696,110 @@ export default function Home() {
 
         {/* Main: year filters + show list */}
         <main className="flex-1 min-w-0">
-          {/* Year filters */}
-          <div className="flex items-center justify-end gap-0.5 sm:gap-1 mb-4 flex-nowrap overflow-x-auto">
-            <button
-              onClick={() => setSelectedYear(null)}
-              className={`text-[11px] sm:text-[13px] uppercase tracking-widest px-1.5 sm:px-3 py-0.5 sm:py-1 shrink-0 transition-colors ${
-                selectedYear === null ? "bg-black text-white" : "text-[#999] hover:text-[#E70000]"
-              }`}
+          {/* Year filters + search — fixed height so content below never moves */}
+          <div className="relative mb-4 h-[28px] sm:h-[30px]">
+            {/* Filters layer */}
+            <div
+              className="absolute inset-0 flex items-center gap-0.5 sm:gap-1 transition-opacity duration-200"
+              style={{ opacity: searchOpen ? 0 : 1, pointerEvents: searchOpen ? "none" : "auto" }}
             >
-              All
-            </button>
-            {years.map((y) => (
               <button
-                key={y}
-                onClick={() => setSelectedYear(y === selectedYear ? null : y)}
-                className={`text-[11px] sm:text-[13px] uppercase tracking-widest px-1.5 sm:px-3 py-0.5 sm:py-1 tabular-nums shrink-0 transition-colors ${
-                  selectedYear === y ? "bg-black text-white" : "text-[#999] hover:text-[#E70000]"
-                }`}
+                onClick={() => { setSearchOpen(true); }}
+                className="text-[#999] hover:text-black transition-colors shrink-0 mr-1"
+                aria-label="Search tracklistings"
               >
-                {y}
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                  <circle cx="6" cy="6" r="4.5" stroke="currentColor" strokeWidth="1.5"/>
+                  <path d="M10 10l3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                </svg>
               </button>
-            ))}
+              <div className="flex items-center justify-end gap-0.5 sm:gap-1 flex-1 flex-nowrap overflow-x-auto">
+                <button
+                  onClick={() => setSelectedYear(null)}
+                  className={`text-[11px] sm:text-[13px] uppercase tracking-widest px-1.5 sm:px-3 py-0.5 sm:py-1 shrink-0 transition-colors ${
+                    selectedYear === null ? "bg-black text-white" : "text-[#999] hover:text-[#E70000]"
+                  }`}
+                >
+                  All
+                </button>
+                {years.map((y) => (
+                  <button
+                    key={y}
+                    onClick={() => setSelectedYear(y === selectedYear ? null : y)}
+                    className={`text-[11px] sm:text-[13px] uppercase tracking-widest px-1.5 sm:px-3 py-0.5 sm:py-1 tabular-nums shrink-0 transition-colors ${
+                      selectedYear === y ? "bg-black text-white" : "text-[#999] hover:text-[#E70000]"
+                    }`}
+                  >
+                    {y}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Search layer */}
+            <div
+              className="absolute inset-0 flex items-center transition-opacity duration-200"
+              style={{ opacity: searchOpen ? 1 : 0, pointerEvents: searchOpen ? "auto" : "none" }}
+            >
+              <div className="flex items-center gap-2 flex-1 border-b border-dashed border-black/20">
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && searchInput.trim()) {
+                      transitionQuery(searchInput.trim());
+                    }
+                    if (e.key === "Escape") {
+                      setSearchOpen(false);
+                      setTimeout(() => { setSearchInput(""); transitionQuery(""); }, 200);
+                    }
+                  }}
+                  placeholder="Search tracklistings…"
+                  className="flex-1 text-[13px] font-light outline-none bg-transparent placeholder-[#999] py-0.5 min-w-0"
+                />
+                <button
+                  onClick={() => {
+                    setSearchOpen(false);
+                    setTimeout(() => { setSearchInput(""); transitionQuery(""); }, 200);
+                  }}
+                  className="text-[#999] hover:text-black transition-colors shrink-0"
+                  aria-label="Close search"
+                >
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
           </div>
+
+          <div
+            style={{
+              opacity: listVisible ? 1 : 0,
+              transition: listTransition,
+            }}
+          >
+          {searchQuery && (
+            <p className="text-[12px] text-[#999] mb-3">
+              {searchResults?.length ?? 0} show{searchResults?.length !== 1 ? "s" : ""} with &ldquo;{searchQuery}&rdquo; in tracklisting
+            </p>
+          )}
+
+          {searchQuery && searchResults?.length === 0 && (
+            <div className="mt-4">
+              <div
+                className="font-black leading-none select-none"
+                style={{ fontSize: "clamp(36px, 5.5vw, 64px)", letterSpacing: "-0.05em", color: "rgba(231, 0, 0, 0.30)" }}
+              >
+                NO RESULTS.
+              </div>
+              <p className="text-[12px] text-[#999] mt-4">
+                Maybe email us and suggest an artist for the show.
+              </p>
+            </div>
+          )}
 
           {loadingRecent && (
             <p className="text-[11px] uppercase tracking-widest text-[#999] mb-3">
@@ -653,7 +809,7 @@ export default function Home() {
 
           {/* Show list — 8px gap between cards, each is its own bordered box */}
           <div className="space-y-2">
-            {filteredShows.map((show) => (
+            {displayedShows.map((show) => (
               <div
                 key={show.id}
                 data-show-id={show.id}
@@ -678,13 +834,15 @@ export default function Home() {
                       <ShowPlayer
                         show={show}
                         isSelected={selectedId === show.id}
-                        autoOpenTracklist={show.id === allShows[0]?.id}
+                        autoOpenTracklist={show.id === allShows[0]?.id || (!!searchQuery && selectedId === show.id)}
+                        highlightQuery={searchQuery || undefined}
                       />
                     </div>
                   </div>
                 </div>
               </div>
             ))}
+          </div>
           </div>
         </main>
       </div>
