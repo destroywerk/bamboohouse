@@ -30,6 +30,7 @@ export const shows: Show[] = [
     displayDate: "12.04.26",
     mixcloudKey: "/MusicBoxRadioUK/bamboo-house-sunday-12th-april-2026/",
     photo: "/photos/bh61.jpg",
+    quote: "I think that there's a lot of value in doing, without knowing. Sometimes too much thinking can inhibit your creativity. Do first, theorize after.",
     tracklist: {
       tim: [
         { artist: "Greg Haines", title: "So It Goes" },
