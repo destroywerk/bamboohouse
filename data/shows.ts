@@ -24,6 +24,42 @@ const UNAVAILABLE: Track[] | null = null;
 
 export const shows: Show[] = [
   {
+    id: "bh61",
+    number: 61,
+    date: "2026-04-26",
+    displayDate: "26.04.26",
+    mixcloudKey: "/MusicBoxRadioUK/bamboo-house-sunday-26th-april-2026/",
+    photo: "/photos/bh61.jpg",
+    tracklist: {
+      tim: [
+        { artist: "Greg Haines", title: "So It Goes" },
+        { artist: "Pedro Ricardo", title: "Até Provar" },
+        { artist: "Dylan Henner", title: "We Walked all the Way to the Lake and The Water Was So Still We Jumped in Naked" },
+        { artist: "Maria Teriaeva", title: "How Are You Feeling?" },
+        { artist: "Caterina Barbieri/Bendik Giske", title: "Intuition, Nimbus" },
+        { artist: "Peter Sculthorpe", title: "Night-Song" },
+        { artist: "Claire M Singer", title: "Solas" },
+        { artist: "Läuten der Seele", title: "Glaskopf Mit Watte" },
+        { artist: "Laura Cannell", title: "The Devil in the Trees" },
+        { artist: "K. Leimer", title: "For Days" },
+        { artist: "Elori Saxl, Henry Solomon", title: "Symmetries" },
+        { artist: "OHYUNG", title: "kiara" },
+        { artist: "Delphine Dora", title: "Flux" },
+      ],
+      martyn: [
+        { artist: "Tokoro Wohnen", title: "Upstream Paradox" },
+        { artist: "Bowery Electric", title: "Black Light" },
+        { artist: "Miradasvacas", title: "IV" },
+        { artist: "Brian McBride", title: "Mélodrames télégraphiés (In B Major 7th), Part 1" },
+        { artist: "Boards of Canada", title: "Sunshine Recorder" },
+        { artist: "James Webb", title: "Back Room" },
+        { artist: "TVO", title: "Albert Hall Chess Boxing" },
+        { artist: "Dean Blunt", title: "as long as ropes unravel fake rolex will travel" },
+        { artist: "Celer", title: "Rains Lit By Neon" },
+      ],
+    },
+  },
+  {
     id: "bh60",
     number: 60,
     date: "2026-03-08",
