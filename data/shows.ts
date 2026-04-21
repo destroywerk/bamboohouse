@@ -26,9 +26,9 @@ export const shows: Show[] = [
   {
     id: "bh61",
     number: 61,
-    date: "2026-04-26",
-    displayDate: "26.04.26",
-    mixcloudKey: "/MusicBoxRadioUK/bamboo-house-sunday-26th-april-2026/",
+    date: "2026-04-12",
+    displayDate: "12.04.26",
+    mixcloudKey: "/MusicBoxRadioUK/bamboo-house-sunday-12th-april-2026/",
     photo: "/photos/bh61.jpg",
     tracklist: {
       tim: [
